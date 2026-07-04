@@ -124,7 +124,7 @@ export default function App() {
     const fetchCatalogs = async () => {
       try {
         // Render fallback url or local server
-        const apiHost = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const apiHost = import.meta.env.VITE_API_URL || '';
         const [odsRes, logrosRes] = await Promise.all([
           fetch(`${apiHost}/api/ods`),
           fetch(`${apiHost}/api/logros`)

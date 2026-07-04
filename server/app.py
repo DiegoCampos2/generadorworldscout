@@ -3,15 +3,27 @@
 """Flask API Server for the Scout Activity Planner Application."""
 
 import os
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 
 from data import ODS_DATA, LOGROS_DATA
 from generator import generate_docx_stream, generate_pdf_stream
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../dist', static_url_path='')
 # Enable CORS for frontend flexibility (especially when frontend is deployed on Vercel)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+@app.route('/')
+def serve_frontend():
+    """Serve the React frontend."""
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve static files from the React build."""
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

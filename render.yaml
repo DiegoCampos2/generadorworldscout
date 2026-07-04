@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: scout-app-backend
+    runtime: python
+    buildCommand: pip install -r server/requirements.txt
+    startCommand: python server/app.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: VITE_API_URL
+        sync: false

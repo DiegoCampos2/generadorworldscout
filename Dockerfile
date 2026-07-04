@@ -1,24 +1,27 @@
-FROM python:3.11
+FROM python:3.11-slim
 
 # Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy backend requirements and install
+# Copy and install Python dependencies
 COPY server/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy frontend and build
-COPY package*.json .
+# Copy frontend files
+COPY package*.json ./
 RUN npm install
-COPY . .
-RUN npm run build
 
-# Copy backend files
-COPY server/ ./server/
+# Copy all source files
+COPY . .
+
+# Build frontend
+RUN npm run build
 
 # Expose port
 EXPOSE 5000

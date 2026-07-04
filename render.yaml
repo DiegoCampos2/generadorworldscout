@@ -1,7 +1,9 @@
 services:
   - type: web
     name: primerospasostropadecaminantes
-    runtime: docker
+    runtime: python
+    buildCommand: pip install -r server/requirements.txt && npm install && npm run build
+    startCommand: python server/app.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0

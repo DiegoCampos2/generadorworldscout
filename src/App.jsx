@@ -346,7 +346,7 @@ export default function App() {
       {/* HEADER LOGO */}
       <header className="glass-panel" style={{ margin: '15px 15px 5px 15px', borderRadius: '15px', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
         <img 
-          src="/src/assets/logos/WSCT_LOGO_EN_RGB_POS (1).svg" 
+          src="/wsc-logo.svg" 
           alt="World Scouting" 
           style={{ height: '35px', filter: 'brightness(0) invert(1)' }} 
         />

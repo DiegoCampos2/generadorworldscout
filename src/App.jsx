@@ -113,9 +113,6 @@ const TROPA_PHOTOS_DEFAULT = [
   { id: 25, src: tropaPhoto25 },
 ];
 
-// Código secreto para auto-admin (compártelo solo con personas de confianza)
-const ADMIN_SECRET_CODE = 'SIEMPREADELANTE2026';
-
 // --- Firebase imports ---
 import { db, auth, googleProvider } from './firebase';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
@@ -1867,7 +1864,6 @@ function AuthModal({ mode, onSwitchMode, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [adminCode, setAdminCode] = useState('');
   const [nombre, setNombre] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -1909,12 +1905,11 @@ function AuthModal({ mode, onSwitchMode, onClose }) {
         onClose();
       } else {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdminCode = adminCode.trim() === ADMIN_SECRET_CODE;
         await setDoc(doc(db, 'users', cred.user.uid), {
           nombre: nombre.trim(),
           email: email.trim(),
-          role: isAdminCode ? 'admin' : 'member',
-          status: isAdminCode ? 'approved' : 'pending',
+          role: 'member',
+          status: 'pending',
           createdAt: serverTimestamp()
         });
         alert('Cuenta creada. Un administrador debe aprobar tu acceso antes de que puedas publicar contenido.');
@@ -1987,14 +1982,6 @@ function AuthModal({ mode, onSwitchMode, onClose }) {
               <input type="password" className="form-input" placeholder="Repite la contraseña" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
             </div>
           )}
-          {mode === 'register' && (
-            <div className="form-group">
-              <label className="form-label">Código de administrador (opcional)</label>
-              <input type="text" className="form-input" placeholder="Si tienes un código, escríbelo aquí" value={adminCode} onChange={e => setAdminCode(e.target.value)} />
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Si no tienes un código, tu cuenta quedará pendiente de aprobación.</p>
-            </div>
-          )}
-
           {error && <p style={{ color: 'var(--fire-red)', fontSize: '12px', marginBottom: '12px' }}>{error}</p>}
 
           <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>

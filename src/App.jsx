@@ -81,31 +81,31 @@ import tropaPhoto24 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.
 import tropaPhoto25 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.34 PM (3).jpeg';
 
 const TROPA_PHOTOS_DEFAULT = [
-  { id: 1, src: tropaPhoto1, caption: 'Tropa en acción' },
-  { id: 2, src: tropaPhoto2, caption: 'Caminata grupal' },
-  { id: 3, src: tropaPhoto3, caption: 'Actividad al aire libre' },
-  { id: 4, src: tropaPhoto4, caption: 'Trabajo en equipo' },
-  { id: 5, src: tropaPhoto5, caption: 'Aventura scout' },
-  { id: 6, src: tropaPhoto6, caption: 'Convivencia' },
-  { id: 7, src: tropaPhoto7, caption: 'Exploración' },
-  { id: 8, src: tropaPhoto8, caption: 'Campamento' },
-  { id: 9, src: tropaPhoto9, caption: 'Juegos de patrulla' },
-  { id: 10, src: tropaPhoto10, caption: 'Reflexión grupal' },
-  { id: 11, src: tropaPhoto11, caption: 'Siempre adelante' },
-  { id: 12, src: tropaPhoto12, caption: 'Actividad de unidad' },
-  { id: 13, src: tropaPhoto13, caption: 'Caminantes en marcha' },
-  { id: 14, src: tropaPhoto14, caption: 'Trabajo manual' },
-  { id: 15, src: tropaPhoto15, caption: 'Vida en la naturaleza' },
-  { id: 16, src: tropaPhoto16, caption: 'Espiritualidad scout' },
-  { id: 17, src: tropaPhoto17, caption: 'Servicio comunitario' },
-  { id: 18, src: tropaPhoto18, caption: 'Aprendizaje conjunto' },
-  { id: 19, src: tropaPhoto19, caption: 'Momentos compartidos' },
-  { id: 20, src: tropaPhoto20, caption: 'Habilidades scout' },
-  { id: 21, src: tropaPhoto21, caption: 'Buena acción' },
-  { id: 22, src: tropaPhoto22, caption: 'Patrulla en marcha' },
-  { id: 23, src: tropaPhoto23, caption: 'Conoce tu entorno' },
-  { id: 24, src: tropaPhoto24, caption: 'Crecimiento personal' },
-  { id: 25, src: tropaPhoto25, caption: 'Comunidad unida' },
+  { id: 1, src: tropaPhoto1 },
+  { id: 2, src: tropaPhoto2 },
+  { id: 3, src: tropaPhoto3 },
+  { id: 4, src: tropaPhoto4 },
+  { id: 5, src: tropaPhoto5 },
+  { id: 6, src: tropaPhoto6 },
+  { id: 7, src: tropaPhoto7 },
+  { id: 8, src: tropaPhoto8 },
+  { id: 9, src: tropaPhoto9 },
+  { id: 10, src: tropaPhoto10 },
+  { id: 11, src: tropaPhoto11 },
+  { id: 12, src: tropaPhoto12 },
+  { id: 13, src: tropaPhoto13 },
+  { id: 14, src: tropaPhoto14 },
+  { id: 15, src: tropaPhoto15 },
+  { id: 16, src: tropaPhoto16 },
+  { id: 17, src: tropaPhoto17 },
+  { id: 18, src: tropaPhoto18 },
+  { id: 19, src: tropaPhoto19 },
+  { id: 20, src: tropaPhoto20 },
+  { id: 21, src: tropaPhoto21 },
+  { id: 22, src: tropaPhoto22 },
+  { id: 23, src: tropaPhoto23 },
+  { id: 24, src: tropaPhoto24 },
+  { id: 25, src: tropaPhoto25 },
 ];
 
 // --- Firebase imports (solo Firestore para texto) ---
@@ -1545,7 +1545,6 @@ function TropaGallery() {
       const url = await uploadToCloudinary(file);
       await addDoc(collection(db, 'gallery_photos'), {
         src: url,
-        caption: file.name.replace(/\.[^.]+$/, ''),
         uploadedAt: serverTimestamp()
       });
       setShowUpload(false);
@@ -1598,8 +1597,7 @@ function TropaGallery() {
             <button className="photo-zoom-close" onClick={() => setZoomedPhoto(null)}>
               <X size={24} />
             </button>
-            <img src={zoomedPhoto.src} alt={zoomedPhoto.caption} />
-            <p className="photo-zoom-caption">{zoomedPhoto.caption}</p>
+            <img src={zoomedPhoto.src} alt="Foto de la tropa" />
           </div>
         </div>
       )}

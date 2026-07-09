@@ -3,8 +3,8 @@
 // 2. Ve a Settings → Upload → Upload presets → "Add upload preset"
 // 3. Marca "Unsigned" y copia el preset name
 // 4. Reemplaza estos valores:
-export const CLOUDINARY_CLOUD_NAME = 'TU_CLOUD_NAME';
-export const CLOUDINARY_UPLOAD_PRESET = 'TU_UPLOAD_PRESET';
+export const CLOUDINARY_CLOUD_NAME = 'gvthmjgu';
+export const CLOUDINARY_UPLOAD_PRESET = 'tropacaminantes';
 
 export async function uploadToCloudinary(file) {
   const formData = new FormData();

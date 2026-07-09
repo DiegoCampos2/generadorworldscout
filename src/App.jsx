@@ -53,20 +53,34 @@ const ODS_IMAGES = {
   17: odsImg17
 };
 
-// --- Tropa photos imports ---
-import tropaPhoto1 from './assets/images/WUjZbTwQbL7LfAcKk9tv.webp';
-import tropaPhoto2 from './assets/images/TeUAJPtEsRBCSPWwhyAc.webp';
-import tropaPhoto3 from './assets/images/pzEGqvenf5pLp5zUezqP.webp';
-import tropaPhoto4 from './assets/images/mDgF3h8YCaD7uxVzHoQs.webp';
-import tropaPhoto5 from './assets/images/MBNe8R6jf65batXVq73H.webp';
-import tropaPhoto6 from './assets/images/kDoKztUm9BiVJ2usTMXh.webp';
-import tropaPhoto7 from './assets/images/iTtyn9hMCuuYraW5KiLK.webp';
-import tropaPhoto8 from './assets/images/hRmshGVaRxoarUmTx3CS.webp';
-import tropaPhoto9 from './assets/images/gWgdVNXEDXAEa7wHV6KB.webp';
-import tropaPhoto10 from './assets/images/GVLL4P1XDYwx3KPeQE4x.webp';
-import tropaPhoto11 from './assets/images/AQc8B4LqGpuL1z34BNhZ.webp';
+// --- Tropa photos imports (fotos reales) ---
+import tropaPhoto1 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM.jpeg';
+import tropaPhoto2 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (1).jpeg';
+import tropaPhoto3 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (2).jpeg';
+import tropaPhoto4 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (3).jpeg';
+import tropaPhoto5 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (4).jpeg';
+import tropaPhoto6 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (5).jpeg';
+import tropaPhoto7 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (6).jpeg';
+import tropaPhoto8 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.36 PM (7).jpeg';
+import tropaPhoto9 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM.jpeg';
+import tropaPhoto10 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (1).jpeg';
+import tropaPhoto11 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (2).jpeg';
+import tropaPhoto12 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (3).jpeg';
+import tropaPhoto13 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (4).jpeg';
+import tropaPhoto14 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (5).jpeg';
+import tropaPhoto15 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (6).jpeg';
+import tropaPhoto16 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (7).jpeg';
+import tropaPhoto17 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (8).jpeg';
+import tropaPhoto18 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (9).jpeg';
+import tropaPhoto19 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (10).jpeg';
+import tropaPhoto20 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (11).jpeg';
+import tropaPhoto21 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.35 PM (12).jpeg';
+import tropaPhoto22 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.34 PM.jpeg';
+import tropaPhoto23 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.34 PM (1).jpeg';
+import tropaPhoto24 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.34 PM (2).jpeg';
+import tropaPhoto25 from './assets/images/tropa/WhatsApp Image 2026-07-08 at 11.35.34 PM (3).jpeg';
 
-const TROPA_PHOTOS = [
+const TROPA_PHOTOS_DEFAULT = [
   { id: 1, src: tropaPhoto1, caption: 'Tropa en acción' },
   { id: 2, src: tropaPhoto2, caption: 'Caminata grupal' },
   { id: 3, src: tropaPhoto3, caption: 'Actividad al aire libre' },
@@ -78,33 +92,31 @@ const TROPA_PHOTOS = [
   { id: 9, src: tropaPhoto9, caption: 'Juegos de patrulla' },
   { id: 10, src: tropaPhoto10, caption: 'Reflexión grupal' },
   { id: 11, src: tropaPhoto11, caption: 'Siempre adelante' },
+  { id: 12, src: tropaPhoto12, caption: 'Actividad de unidad' },
+  { id: 13, src: tropaPhoto13, caption: 'Caminantes en marcha' },
+  { id: 14, src: tropaPhoto14, caption: 'Trabajo manual' },
+  { id: 15, src: tropaPhoto15, caption: 'Vida en la naturaleza' },
+  { id: 16, src: tropaPhoto16, caption: 'Espiritualidad scout' },
+  { id: 17, src: tropaPhoto17, caption: 'Servicio comunitario' },
+  { id: 18, src: tropaPhoto18, caption: 'Aprendizaje conjunto' },
+  { id: 19, src: tropaPhoto19, caption: 'Momentos compartidos' },
+  { id: 20, src: tropaPhoto20, caption: 'Habilidades scout' },
+  { id: 21, src: tropaPhoto21, caption: 'Buena acción' },
+  { id: 22, src: tropaPhoto22, caption: 'Patrulla en marcha' },
+  { id: 23, src: tropaPhoto23, caption: 'Conoce tu entorno' },
+  { id: 24, src: tropaPhoto24, caption: 'Crecimiento personal' },
+  { id: 25, src: tropaPhoto25, caption: 'Comunidad unida' },
 ];
 
-// --- Novedades data (editable) ---
-// Para añadir una nueva noticia, copia un bloque y cambia los datos.
-const NOTICIAS = [
-  {
-    id: 1,
-    fecha: '2026-07-04',
-    titulo: 'Bienvenida a la plataforma',
-    texto: 'Estrenamos nuestro nuevo portal interactivo para la Comunidad de Caminantes del GS Paola Prince. Aquí podrás consultar los ODS, tus Indicadores de Logro y generar planillas de actividades.',
-    foto: tropaPhoto1
-  },
-  {
-    id: 2,
-    fecha: '2026-06-28',
-    titulo: 'Caminata al Parque Nacional',
-    texto: 'La tropa realizó una caminata de orientación en el Parque Nacional El Ávila. Los jóvenes practicaron el uso de brújula y mapa topográfico, fortaleciendo el trabajo en equipo.',
-    foto: tropaPhoto3
-  },
-  {
-    id: 3,
-    fecha: '2026-06-15',
-    titulo: 'Taller de primeros auxilios',
-    texto: 'Realizamos un taller práctico de primeros auxilios donde los caminantes aprendieron a curar heridas, hacer vendajes y responder en situaciones de emergencia.',
-    foto: tropaPhoto5
-  }
-];
+// --- Firebase imports ---
+import { db, storage } from './firebase';
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+// --- Novedades: Ahora se gestionan desde Firebase Firestore ---
+// Las noticias se cargan dinámicamente desde Firestore en NoticiasView.
+// Las fotos de la galería se cargan dinámicamente en TropaGallery desde Firebase Storage.
+// Las fotos locales (TROPA_PHOTOS_DEFAULT) sirven como respaldo inicial.
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -1507,22 +1519,71 @@ function LogrosExplorer({ catalog }) {
 }
 
 // ----------------------------------------------------
-// CHILD VIEWS: Galería de Fotos de la Tropa (Zoom dinámico)
+// CHILD VIEWS: Galería de Fotos de la Tropa (Zoom dinámico + Firebase)
 // ----------------------------------------------------
 function TropaGallery() {
   const [zoomedPhoto, setZoomedPhoto] = useState(null);
+  const [photos, setPhotos] = useState(TROPA_PHOTOS_DEFAULT);
+  const [showUpload, setShowUpload] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // Cargar fotos adicionales desde Firestore
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, 'gallery_photos'), (snap) => {
+      const extra = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (extra.length > 0) {
+        setPhotos([...extra, ...TROPA_PHOTOS_DEFAULT]);
+      }
+    }, () => {});
+    return () => unsub();
+  }, []);
+
+  const handleUpload = async (file) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      await addDoc(collection(db, 'gallery_photos'), {
+        src: url,
+        caption: file.name.replace(/\.[^.]+$/, ''),
+        uploadedAt: serverTimestamp()
+      });
+      setShowUpload(false);
+    } catch (e) {
+      alert('Error al subir la foto. Verifica la configuración de Firebase.');
+    }
+    setUploading(false);
+  };
 
   return (
     <div className="glass-panel" style={{ marginBottom: '20px' }}>
       <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Camera size={20} style={{ color: 'var(--river-blue)' }} />
         Galería de la Tropa
+        <button className="btn-secondary" style={{ marginLeft: 'auto', padding: '4px 10px', fontSize: '11px' }} onClick={() => setShowUpload(!showUpload)}>
+          <Plus size={12} /> Subir foto
+        </button>
       </h3>
       <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '15px' }}>
         Toca una foto para ampliarla.
       </p>
+
+      {showUpload && (
+        <div style={{ marginBottom: '15px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={e => handleUpload(e.target.files[0])}
+            style={{ fontSize: '12px', color: 'var(--text-secondary)' }}
+          />
+          {uploading && <p style={{ fontSize: '12px', color: 'var(--river-blue)', marginTop: '8px' }}>Subiendo...</p>}
+        </div>
+      )}
+
       <div className="tropa-gallery">
-        {TROPA_PHOTOS.map(photo => (
+        {photos.map(photo => (
           <div 
             key={photo.id} 
             className="tropa-thumb"
@@ -1533,7 +1594,6 @@ function TropaGallery() {
         ))}
       </div>
 
-      {/* Modal de zoom */}
       {zoomedPhoto && (
         <div className="photo-zoom-overlay" onClick={() => setZoomedPhoto(null)}>
           <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
@@ -1550,10 +1610,27 @@ function TropaGallery() {
 }
 
 // ----------------------------------------------------
-// CHILD VIEWS: Noticias y Novedades
+// CHILD VIEWS: Noticias y Novedades (Firebase Firestore)
 // ----------------------------------------------------
 function NoticiasView() {
+  const [noticias, setNoticias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    const q = query(collection(db, 'noticias'), orderBy('fecha', 'desc'));
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setNoticias(data);
+      setLoading(false);
+    }, () => {
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
   const formatDate = (dateStr) => {
+    if (!dateStr) return '';
     const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     const d = new Date(dateStr);
     return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
@@ -1564,31 +1641,156 @@ function NoticiasView() {
       <h2 className="section-title">Noticias y Novedades</h2>
       <p className="section-subtitle">Mantente al día con las últimas actividades de la tropa.</p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {NOTICIAS.map(noticia => (
-          <div key={noticia.id} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
-            {noticia.foto && (
-              <div style={{ width: '100%', height: '160px', overflow: 'hidden' }}>
-                <img 
-                  src={noticia.foto} 
-                  alt={noticia.titulo} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+      <button className="btn-primary" style={{ width: '100%', marginBottom: '20px' }} onClick={() => setShowForm(!showForm)}>
+        <Plus size={18} /> {showForm ? 'Cancelar' : 'Publicar nueva noticia'}
+      </button>
+
+      {showForm && <NoticiaForm onPublished={() => setShowForm(false)} />}
+
+      {loading ? (
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando noticias...</p>
+      ) : noticias.length === 0 ? (
+        <div className="glass-panel" style={{ textAlign: 'center', padding: '30px' }}>
+          <Newspaper size={40} style={{ color: 'var(--text-muted)', marginBottom: '10px' }} />
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Aún no hay noticias publicadas.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '5px' }}>Usa el botón de arriba para publicar la primera.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {noticias.map(noticia => (
+            <div key={noticia.id} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
+              {noticia.foto && (
+                <div style={{ width: '100%', height: '160px', overflow: 'hidden' }}>
+                  <img 
+                    src={noticia.foto} 
+                    alt={noticia.titulo} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
+              <div style={{ padding: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                  <Calendar size={14} style={{ color: 'var(--river-blue)' }} />
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                    {formatDate(noticia.fecha)}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '16px', color: '#fff', marginBottom: '8px' }}>{noticia.titulo}</h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{noticia.texto}</p>
               </div>
-            )}
-            <div style={{ padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                <Calendar size={14} style={{ color: 'var(--river-blue)' }} />
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
-                  {formatDate(noticia.fecha)}
-                </span>
-              </div>
-              <h3 style={{ fontSize: '16px', color: '#fff', marginBottom: '8px' }}>{noticia.titulo}</h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{noticia.texto}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// CHILD VIEWS: Formulario de Publicación de Noticias
+// ----------------------------------------------------
+function NoticiaForm({ onPublished }) {
+  const [titulo, setTitulo] = useState('');
+  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
+  const [texto, setTexto] = useState('');
+  const [fotoFile, setFotoFile] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [publishing, setPublishing] = useState(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFotoFile(file);
+      setFotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!titulo.trim() || !texto.trim()) {
+      alert('Por favor completa el título y el texto.');
+      return;
+    }
+    setPublishing(true);
+    try {
+      let fotoUrl = '';
+      if (fotoFile) {
+        const storageRef = ref(storage, `noticias/${Date.now()}_${fotoFile.name}`);
+        await uploadBytes(storageRef, fotoFile);
+        fotoUrl = await getDownloadURL(storageRef);
+      }
+      await addDoc(collection(db, 'noticias'), {
+        titulo: titulo.trim(),
+        fecha: fecha,
+        texto: texto.trim(),
+        foto: fotoUrl,
+        createdAt: serverTimestamp()
+      });
+      onPublished();
+    } catch (e) {
+      alert('Error al publicar. Verifica la configuración de Firebase.');
+    }
+    setPublishing(false);
+  };
+
+  return (
+    <div className="glass-panel" style={{ marginBottom: '20px' }}>
+      <h3 style={{ fontSize: '16px', color: '#fff', marginBottom: '15px' }}>Nueva Publicación</h3>
+      
+      <div className="form-group">
+        <label className="form-label">Título</label>
+        <input 
+          type="text" 
+          className="form-input" 
+          placeholder="Título de la noticia" 
+          value={titulo} 
+          onChange={e => setTitulo(e.target.value)} 
+        />
       </div>
+
+      <div className="form-group">
+        <label className="form-label">Fecha</label>
+        <input 
+          type="date" 
+          className="form-input" 
+          value={fecha} 
+          onChange={e => setFecha(e.target.value)} 
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Contenido</label>
+        <textarea 
+          className="form-textarea" 
+          placeholder="Escribe el contenido de la noticia..." 
+          value={texto} 
+          onChange={e => setTexto(e.target.value)} 
+          style={{ minHeight: '120px' }}
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Foto (opcional)</label>
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={handleFileChange}
+          style={{ fontSize: '12px', color: 'var(--text-secondary)' }} 
+        />
+        {fotoPreview && (
+          <div style={{ marginTop: '10px', borderRadius: '10px', overflow: 'hidden' }}>
+            <img src={fotoPreview} alt="Vista previa" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover' }} />
+          </div>
+        )}
+      </div>
+
+      <button 
+        className="btn-primary" 
+        style={{ width: '100%' }} 
+        onClick={handlePublish}
+        disabled={publishing}
+      >
+        {publishing ? 'Publicando...' : 'Publicar noticia'}
+      </button>
     </div>
   );
 }

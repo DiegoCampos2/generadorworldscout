@@ -1,9 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
-// REEMPLAZA estos valores con los de tu proyecto Firebase
-// Consigue la config en: Firebase Console → Project Settings → Your apps → Web App
-// Solo necesitas Firestore (gratis en plan Spark) - NO necesitas Storage
 const firebaseConfig = {
   apiKey: "AIzaSyDgWKKGXTUH0LxOFvKBKnxBwhPz8qpeqm4",
   authDomain: "caminantesscout-bb94c.firebaseapp.com",
@@ -15,3 +13,4 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth(app);

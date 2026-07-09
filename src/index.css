@@ -468,3 +468,16 @@ h1, h2, h3, h4, h5, h6 {
 .photo-zoom-close:hover {
   background: var(--fire-red);
 }
+
+/* Auth modal */
+.auth-modal {
+  position: relative;
+  background: var(--dark-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: var(--glass-glow);
+  animation: fadeInUp 0.4s ease forwards;
+}

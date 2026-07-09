@@ -16,7 +16,12 @@ import {
   Newspaper,
   Camera,
   X,
-  Calendar
+  Calendar,
+  Shield,
+  LogIn,
+  LogOut,
+  UserCheck,
+  UserX
 } from 'lucide-react';
 
 // --- Static image imports (Vite bundles these correctly for prod) ---
@@ -108,9 +113,10 @@ const TROPA_PHOTOS_DEFAULT = [
   { id: 25, src: tropaPhoto25 },
 ];
 
-// --- Firebase imports (solo Firestore para texto) ---
-import { db } from './firebase';
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
+// --- Firebase imports ---
+import { db, auth } from './firebase';
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { uploadToCloudinary } from './cloudinary';
 
 // --- Novedades: Ahora se gestionan desde Firebase Firestore ---
@@ -120,6 +126,31 @@ import { uploadToCloudinary } from './cloudinary';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
+  
+  // Auth State
+  const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+
+  // Listen to auth state changes
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+        if (userDoc.exists()) {
+          setUserRole(userDoc.data());
+        }
+      } else {
+        setUser(null);
+        setUserRole(null);
+      }
+      setAuthLoading(false);
+    });
+    return () => unsub();
+  }, []);
   
   // Catalog Data from Backend (or local fallback if server is starting/down)
   const [odsCatalog, setOdsCatalog] = useState([]);
@@ -413,17 +444,45 @@ export default function App() {
   return (
     <div>
       {/* HEADER LOGO */}
-      <header className="glass-panel" style={{ margin: '15px 15px 5px 15px', borderRadius: '15px', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-        <img 
-          src="/wsc-logo.svg" 
-          alt="World Scouting" 
-          style={{ height: '35px', filter: 'brightness(0) invert(1)' }} 
-        />
-        <div style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '10px' }}>
-          <h4 style={{ fontSize: '14px', letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>Caminantes</h4>
-          <p style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>GS Paola Prince</p>
+      <header className="glass-panel" style={{ margin: '15px 15px 5px 15px', borderRadius: '15px', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img 
+            src="/wsc-logo.svg" 
+            alt="World Scouting" 
+            style={{ height: '35px', filter: 'brightness(0) invert(1)' }} 
+          />
+          <div style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '10px' }}>
+            <h4 style={{ fontSize: '14px', letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>Caminantes</h4>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>GS Paola Prince</p>
+          </div>
         </div>
+        {/* Auth button */}
+        {authLoading ? null : user ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {userRole?.role === 'admin' && (
+              <button className="btn-secondary" style={{ padding: '6px 10px', fontSize: '11px' }} onClick={() => setActiveTab('admin')}>
+                <Shield size={14} /> Admin
+              </button>
+            )}
+            <button className="btn-secondary" style={{ padding: '6px 10px', fontSize: '11px' }} onClick={() => signOut(auth)}>
+              <LogOut size={14} /> Salir
+            </button>
+          </div>
+        ) : (
+          <button className="btn-secondary" style={{ padding: '6px 14px', fontSize: '12px' }} onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}>
+            <LogIn size={14} /> Iniciar sesión
+          </button>
+        )}
       </header>
+
+      {/* AUTH MODAL */}
+      {showAuthModal && (
+        <AuthModal 
+          mode={authMode} 
+          onSwitchMode={setAuthMode} 
+          onClose={() => setShowAuthModal(false)} 
+        />
+      )}
 
       {/* APP ROOT BODY */}
       <main className="app-container">
@@ -479,7 +538,7 @@ export default function App() {
             </div>
 
             {/* GALERÍA DE FOTOS DE LA TROPA */}
-            <TropaGallery />
+            <TropaGallery user={user} userRole={userRole} />
           </div>
         )}
 
@@ -505,7 +564,10 @@ export default function App() {
         )}
 
         {/* TAB 5: NOTICIAS */}
-        {activeTab === 'noticias' && <NoticiasView />}
+        {activeTab === 'noticias' && <NoticiasView user={user} userRole={userRole} />}
+
+        {/* TAB ADMIN: Solo para admins */}
+        {activeTab === 'admin' && userRole?.role === 'admin' && <AdminPanel />}
 
         {/* TAB 6: GENERADOR FORM */}
         {activeTab === 'planilla' && (
@@ -1521,11 +1583,12 @@ function LogrosExplorer({ catalog }) {
 // ----------------------------------------------------
 // CHILD VIEWS: Galería de Fotos de la Tropa (Zoom dinámico + Firebase)
 // ----------------------------------------------------
-function TropaGallery() {
+function TropaGallery({ user, userRole }) {
   const [zoomedPhoto, setZoomedPhoto] = useState(null);
   const [photos, setPhotos] = useState(TROPA_PHOTOS_DEFAULT);
   const [showUpload, setShowUpload] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const canEdit = user && userRole && (userRole.role === 'admin' || userRole.role === 'member') && userRole.status === 'approved';
 
   // Cargar fotos adicionales desde Firestore
   useEffect(() => {
@@ -1559,9 +1622,11 @@ function TropaGallery() {
       <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Camera size={20} style={{ color: 'var(--river-blue)' }} />
         Galería de la Tropa
-        <button className="btn-secondary" style={{ marginLeft: 'auto', padding: '4px 10px', fontSize: '11px' }} onClick={() => setShowUpload(!showUpload)}>
-          <Plus size={12} /> Subir foto
-        </button>
+        {canEdit && (
+          <button className="btn-secondary" style={{ marginLeft: 'auto', padding: '4px 10px', fontSize: '11px' }} onClick={() => setShowUpload(!showUpload)}>
+            <Plus size={12} /> Subir foto
+          </button>
+        )}
       </h3>
       <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '15px' }}>
         Toca una foto para ampliarla.
@@ -1608,10 +1673,11 @@ function TropaGallery() {
 // ----------------------------------------------------
 // CHILD VIEWS: Noticias y Novedades (Firebase Firestore)
 // ----------------------------------------------------
-function NoticiasView() {
+function NoticiasView({ user, userRole }) {
   const [noticias, setNoticias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const canEdit = user && userRole && (userRole.role === 'admin' || userRole.role === 'member') && userRole.status === 'approved';
 
   useEffect(() => {
     const q = query(collection(db, 'noticias'), orderBy('fecha', 'desc'));
@@ -1637,9 +1703,11 @@ function NoticiasView() {
       <h2 className="section-title">Noticias y Novedades</h2>
       <p className="section-subtitle">Mantente al día con las últimas actividades de la tropa.</p>
 
-      <button className="btn-primary" style={{ width: '100%', marginBottom: '20px' }} onClick={() => setShowForm(!showForm)}>
-        <Plus size={18} /> {showForm ? 'Cancelar' : 'Publicar nueva noticia'}
-      </button>
+      {canEdit && (
+        <button className="btn-primary" style={{ width: '100%', marginBottom: '20px' }} onClick={() => setShowForm(!showForm)}>
+          <Plus size={18} /> {showForm ? 'Cancelar' : 'Publicar nueva noticia'}
+        </button>
+      )}
 
       {showForm && <NoticiaForm onPublished={() => setShowForm(false)} />}
 
@@ -1785,6 +1853,225 @@ function NoticiaForm({ onPublished }) {
       >
         {publishing ? 'Publicando...' : 'Publicar noticia'}
       </button>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// AUTH MODAL: Login y Registro
+// ----------------------------------------------------
+function AuthModal({ mode, onSwitchMode, onClose }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      if (mode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+        onClose();
+      } else {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          nombre: nombre.trim(),
+          email: email.trim(),
+          role: 'member',
+          status: 'pending',
+          createdAt: serverTimestamp()
+        });
+        alert('Cuenta creada. Un administrador debe aprobar tu acceso antes de que puedas publicar contenido.');
+        onClose();
+      }
+    } catch (err) {
+      const msg = err.message || 'Error';
+      if (msg.includes('email-already-in-use')) setError('Este correo ya está registrado.');
+      else if (msg.includes('wrong-password') || msg.includes('invalid-credential')) setError('Correo o contraseña incorrectos.');
+      else if (msg.includes('weak-password')) setError('La contraseña debe tener al menos 6 caracteres.');
+      else if (msg.includes('invalid-email')) setError('Correo electrónico inválido.');
+      else setError(msg);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="photo-zoom-overlay" onClick={onClose}>
+      <div className="auth-modal" onClick={e => e.stopPropagation()}>
+        <button className="photo-zoom-close" onClick={onClose}>
+          <X size={24} />
+        </button>
+        <h3 style={{ fontSize: '20px', color: '#fff', marginBottom: '5px', textAlign: 'center' }}>
+          {mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
+        </h3>
+        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '20px', textAlign: 'center' }}>
+          {mode === 'login' ? 'Accede para publicar contenido' : 'Crea tu cuenta (requiere aprobación)'}
+        </p>
+
+        <form onSubmit={handleSubmit}>
+          {mode === 'register' && (
+            <div className="form-group">
+              <label className="form-label">Nombre completo</label>
+              <input type="text" className="form-input" placeholder="Tu nombre" value={nombre} onChange={e => setNombre(e.target.value)} required />
+            </div>
+          )}
+          <div className="form-group">
+            <label className="form-label">Correo electrónico</label>
+            <input type="email" className="form-input" placeholder="ejemplo@correo.com" value={email} onChange={e => setEmail(e.target.value)} required />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Contraseña</label>
+            <input type="password" className="form-input" placeholder="Mínimo 6 caracteres" value={password} onChange={e => setPassword(e.target.value)} required />
+          </div>
+
+          {error && <p style={{ color: 'var(--fire-red)', fontSize: '12px', marginBottom: '12px' }}>{error}</p>}
+
+          <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
+            {loading ? 'Procesando...' : mode === 'login' ? 'Entrar' : 'Crear cuenta'}
+          </button>
+        </form>
+
+        <p style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', marginTop: '15px' }}>
+          {mode === 'login' ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
+          <a className="inline-link" onClick={() => onSwitchMode(mode === 'login' ? 'register' : 'login')}>
+            {mode === 'login' ? 'Regístrate' : 'Inicia sesión'}
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// ADMIN PANEL: Aprobar/Rechazar usuarios
+// ----------------------------------------------------
+function AdminPanel() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, 'users'), (snap) => {
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      data.sort((a, b) => {
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (b.status === 'pending' && a.status !== 'pending') return 1;
+        return 0;
+      });
+      setUsers(data);
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
+  const approveUser = async (userId) => {
+    await updateDoc(doc(db, 'users', userId), { status: 'approved' });
+  };
+
+  const rejectUser = async (userId) => {
+    await updateDoc(doc(db, 'users', userId), { status: 'rejected' });
+  };
+
+  const makeAdmin = async (userId) => {
+    await updateDoc(doc(db, 'users', userId), { role: 'admin' });
+  };
+
+  const pending = users.filter(u => u.status === 'pending');
+  const approved = users.filter(u => u.status === 'approved');
+  const rejected = users.filter(u => u.status === 'rejected');
+
+  return (
+    <div className="animate-fade-in-up">
+      <h2 className="section-title">Panel de Administración</h2>
+      <p className="section-subtitle">Gestión de usuarios de la tropa</p>
+
+      {loading ? (
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando usuarios...</p>
+      ) : (
+        <>
+          {/* Pendientes */}
+          {pending.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '16px', color: 'var(--ember-orange)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <UserX size={18} /> Pendientes ({pending.length})
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {pending.map(u => (
+                  <div key={u.id} className="glass-panel" style={{ padding: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <p style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>{u.nombre || 'Sin nombre'}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.email}</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button className="btn-primary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => approveUser(u.id)}>
+                        <UserCheck size={14} /> Aprobar
+                      </button>
+                      <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(255,82,82,0.15)', borderColor: 'rgba(255,82,82,0.3)' }} onClick={() => rejectUser(u.id)}>
+                        <UserX size={14} /> Rechazar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Aprobados */}
+          {approved.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '16px', color: 'var(--leaf-green)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <UserCheck size={18} /> Aprobados ({approved.length})
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {approved.map(u => (
+                  <div key={u.id} className="glass-panel" style={{ padding: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <p style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>
+                        {u.nombre || 'Sin nombre'}
+                        {u.role === 'admin' && <span style={{ marginLeft: '8px', fontSize: '10px', background: 'var(--primary-scout)', padding: '2px 8px', borderRadius: '10px' }}>ADMIN</span>}
+                      </p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.email}</p>
+                    </div>
+                    {u.role !== 'admin' && (
+                      <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => makeAdmin(u.id)}>
+                        <Shield size={14} /> Hacer admin
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Rechazados */}
+          {rejected.length > 0 && (
+            <div>
+              <h3 style={{ fontSize: '16px', color: 'var(--fire-red)', marginBottom: '10px' }}>Rechazados ({rejected.length})</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {rejected.map(u => (
+                  <div key={u.id} className="glass-panel" style={{ padding: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', opacity: 0.6 }}>
+                    <div>
+                      <p style={{ fontSize: '14px', color: '#fff' }}>{u.nombre || 'Sin nombre'}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.email}</p>
+                    </div>
+                    <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => approveUser(u.id)}>
+                      <UserCheck size={14} /> Reactivar
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {users.length === 0 && (
+            <div className="glass-panel" style={{ textAlign: 'center', padding: '30px' }}>
+              <p style={{ color: 'var(--text-muted)' }}>No hay usuarios registrados todavía.</p>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -108,11 +108,9 @@ const TROPA_PHOTOS_DEFAULT = [
   { id: 25, src: tropaPhoto25, caption: 'Comunidad unida' },
 ];
 
-// --- Firebase imports ---
+// --- Firebase imports (solo Firestore para texto) ---
 import { db } from './firebase';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
-
-// --- Cloudinary imports ---
 import { uploadToCloudinary } from './cloudinary';
 
 // --- Novedades: Ahora se gestionan desde Firebase Firestore ---
@@ -1725,7 +1723,7 @@ function NoticiaForm({ onPublished }) {
       });
       onPublished();
     } catch (e) {
-      alert('Error al publicar. Verifica la configuración de Cloudinary/Firebase.');
+      alert('Error al publicar. Verifica la configuración de Cloudinary y Firestore.');
     }
     setPublishing(false);
   };

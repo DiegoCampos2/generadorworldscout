@@ -1,28 +1,22 @@
-// Configuración de Cloudinary
-// Regístrate gratis en https://cloudinary.com/users/register/free
-// Ve a Settings → Upload → Add upload preset (Unsigned)
-// Copia tu Cloud Name y el nombre del Upload Preset aquí
-
-export const CLOUDINARY_CONFIG = {
-  cloudName: 'TU_CLOUD_NAME',          // Ejemplo: 'micloud123'
-  uploadPreset: 'TU_UPLOAD_PRESET',    // Ejemplo: 'tropa_preset'
-};
+// Configuración de Cloudinary (GRATIS - 25GB almacenamiento)
+// 1. Crea cuenta en: https://cloudinary.com/users/register_free
+// 2. Ve a Settings → Upload → Upload presets → "Add upload preset"
+// 3. Marca "Unsigned" y copia el preset name
+// 4. Reemplaza estos valores:
+export const CLOUDINARY_CLOUD_NAME = 'TU_CLOUD_NAME';
+export const CLOUDINARY_UPLOAD_PRESET = 'TU_UPLOAD_PRESET';
 
 export async function uploadToCloudinary(file) {
-  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`;
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-  const response = await fetch(url, {
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
     method: 'POST',
-    body: formData,
+    body: formData
   });
 
-  if (!response.ok) {
-    throw new Error('Error al subir imagen a Cloudinary');
-  }
-
-  const data = await response.json();
+  if (!res.ok) throw new Error('Error al subir imagen');
+  const data = await res.json();
   return data.secure_url;
 }

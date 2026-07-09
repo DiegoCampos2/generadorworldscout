@@ -109,9 +109,11 @@ const TROPA_PHOTOS_DEFAULT = [
 ];
 
 // --- Firebase imports ---
-import { db, storage } from './firebase';
+import { db } from './firebase';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+// --- Cloudinary imports ---
+import { uploadToCloudinary } from './cloudinary';
 
 // --- Novedades: Ahora se gestionan desde Firebase Firestore ---
 // Las noticias se cargan dinámicamente desde Firestore en NoticiasView.
@@ -1542,9 +1544,7 @@ function TropaGallery() {
     if (!file) return;
     setUploading(true);
     try {
-      const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      const url = await uploadToCloudinary(file);
       await addDoc(collection(db, 'gallery_photos'), {
         src: url,
         caption: file.name.replace(/\.[^.]+$/, ''),
@@ -1552,7 +1552,7 @@ function TropaGallery() {
       });
       setShowUpload(false);
     } catch (e) {
-      alert('Error al subir la foto. Verifica la configuración de Firebase.');
+      alert('Error al subir la foto. Verifica la configuración de Cloudinary.');
     }
     setUploading(false);
   };
@@ -1714,9 +1714,7 @@ function NoticiaForm({ onPublished }) {
     try {
       let fotoUrl = '';
       if (fotoFile) {
-        const storageRef = ref(storage, `noticias/${Date.now()}_${fotoFile.name}`);
-        await uploadBytes(storageRef, fotoFile);
-        fotoUrl = await getDownloadURL(storageRef);
+        fotoUrl = await uploadToCloudinary(fotoFile);
       }
       await addDoc(collection(db, 'noticias'), {
         titulo: titulo.trim(),
@@ -1727,7 +1725,7 @@ function NoticiaForm({ onPublished }) {
       });
       onPublished();
     } catch (e) {
-      alert('Error al publicar. Verifica la configuración de Firebase.');
+      alert('Error al publicar. Verifica la configuración de Cloudinary/Firebase.');
     }
     setPublishing(false);
   };

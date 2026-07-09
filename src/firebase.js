@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
 
 // REEMPLAZA estos valores con los de tu proyecto Firebase
 // Consigue la config en: Firebase Console → Project Settings → Your apps → Web App
@@ -15,4 +14,3 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const storage = getStorage(app);

@@ -12,7 +12,11 @@ import {
   ArrowLeft, 
   ChevronDown, 
   Info,
-  CheckCircle2
+  CheckCircle2,
+  Newspaper,
+  Camera,
+  X,
+  Calendar
 } from 'lucide-react';
 
 // --- Static image imports (Vite bundles these correctly for prod) ---
@@ -48,6 +52,59 @@ const ODS_IMAGES = {
   13: odsImg13, 14: odsImg14, 15: odsImg15, 16: odsImg16,
   17: odsImg17
 };
+
+// --- Tropa photos imports ---
+import tropaPhoto1 from './assets/images/WUjZbTwQbL7LfAcKk9tv.webp';
+import tropaPhoto2 from './assets/images/TeUAJPtEsRBCSPWwhyAc.webp';
+import tropaPhoto3 from './assets/images/pzEGqvenf5pLp5zUezqP.webp';
+import tropaPhoto4 from './assets/images/mDgF3h8YCaD7uxVzHoQs.webp';
+import tropaPhoto5 from './assets/images/MBNe8R6jf65batXVq73H.webp';
+import tropaPhoto6 from './assets/images/kDoKztUm9BiVJ2usTMXh.webp';
+import tropaPhoto7 from './assets/images/iTtyn9hMCuuYraW5KiLK.webp';
+import tropaPhoto8 from './assets/images/hRmshGVaRxoarUmTx3CS.webp';
+import tropaPhoto9 from './assets/images/gWgdVNXEDXAEa7wHV6KB.webp';
+import tropaPhoto10 from './assets/images/GVLL4P1XDYwx3KPeQE4x.webp';
+import tropaPhoto11 from './assets/images/AQc8B4LqGpuL1z34BNhZ.webp';
+
+const TROPA_PHOTOS = [
+  { id: 1, src: tropaPhoto1, caption: 'Tropa en acción' },
+  { id: 2, src: tropaPhoto2, caption: 'Caminata grupal' },
+  { id: 3, src: tropaPhoto3, caption: 'Actividad al aire libre' },
+  { id: 4, src: tropaPhoto4, caption: 'Trabajo en equipo' },
+  { id: 5, src: tropaPhoto5, caption: 'Aventura scout' },
+  { id: 6, src: tropaPhoto6, caption: 'Convivencia' },
+  { id: 7, src: tropaPhoto7, caption: 'Exploración' },
+  { id: 8, src: tropaPhoto8, caption: 'Campamento' },
+  { id: 9, src: tropaPhoto9, caption: 'Juegos de patrulla' },
+  { id: 10, src: tropaPhoto10, caption: 'Reflexión grupal' },
+  { id: 11, src: tropaPhoto11, caption: 'Siempre adelante' },
+];
+
+// --- Novedades data (editable) ---
+// Para añadir una nueva noticia, copia un bloque y cambia los datos.
+const NOTICIAS = [
+  {
+    id: 1,
+    fecha: '2026-07-04',
+    titulo: 'Bienvenida a la plataforma',
+    texto: 'Estrenamos nuestro nuevo portal interactivo para la Comunidad de Caminantes del GS Paola Prince. Aquí podrás consultar los ODS, tus Indicadores de Logro y generar planillas de actividades.',
+    foto: tropaPhoto1
+  },
+  {
+    id: 2,
+    fecha: '2026-06-28',
+    titulo: 'Caminata al Parque Nacional',
+    texto: 'La tropa realizó una caminata de orientación en el Parque Nacional El Ávila. Los jóvenes practicaron el uso de brújula y mapa topográfico, fortaleciendo el trabajo en equipo.',
+    foto: tropaPhoto3
+  },
+  {
+    id: 3,
+    fecha: '2026-06-15',
+    titulo: 'Taller de primeros auxilios',
+    texto: 'Realizamos un taller práctico de primeros auxilios donde los caminantes aprendieron a curar heridas, hacer vendajes y responder en situaciones de emergencia.',
+    foto: tropaPhoto5
+  }
+];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -390,7 +447,7 @@ export default function App() {
               }}></div>
               <h3 style={{ marginBottom: '8px', fontSize: '18px' }}>Bienvenido Caminante</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '15px' }}>
-                Este portal interactivo te ayudará a integrarte a nuestra Tropa, estudiar las metas globales de los ODS y los Indicadores de Logro de tu Progresión, y rellenar automáticamente la planilla del programa de actividades.
+                Este portal interactivo te ayudará a integrarte a nuestra <strong>Comunidad, conocer</strong> las metas globales de los ODS y los Indicadores de Logro de tu <strong>progresión personal, además te servirá como herramienta para que puedas completar automáticamente una planilla de planificación de actividades.</strong>
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button className="btn-accent" onClick={() => setActiveTab('primeros-pasos')}>
@@ -408,11 +465,14 @@ export default function App() {
                 <strong>Lema de Unidad:</strong> El lema es <em>“Siempre Adelante”</em>. Úsalo habitualmente para saludar o responder afirmativamente.
               </div>
             </div>
+
+            {/* GALERÍA DE FOTOS DE LA TROPA */}
+            <TropaGallery />
           </div>
         )}
 
         {/* TAB 2: PRIMEROS PASOS */}
-        {activeTab === 'primeros-pasos' && <PrimerosPasosView />}
+        {activeTab === 'primeros-pasos' && <PrimerosPasosView onNavigate={setActiveTab} />}
 
         {/* TAB 3: ODS CATALOG */}
         {activeTab === 'ods' && (
@@ -432,7 +492,10 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 5: GENERADOR FORM */}
+        {/* TAB 5: NOTICIAS */}
+        {activeTab === 'noticias' && <NoticiasView />}
+
+        {/* TAB 6: GENERADOR FORM */}
         {activeTab === 'planilla' && (
           <div className="animate-fade-in-up">
             <h2 className="section-title">Planilla de Actividades</h2>
@@ -1032,23 +1095,27 @@ export default function App() {
       {/* MOBILE BAR NAVIGATION */}
       <nav className="mobile-nav">
         <button className={`nav-item ${activeTab === 'inicio' ? 'active' : ''}`} onClick={() => setActiveTab('inicio')}>
-          <Home size={20} />
+          <Home size={18} />
           <span>Inicio</span>
         </button>
         <button className={`nav-item ${activeTab === 'primeros-pasos' ? 'active' : ''}`} onClick={() => setActiveTab('primeros-pasos')}>
-          <Compass size={20} />
+          <Compass size={18} />
           <span>Pasos</span>
         </button>
         <button className={`nav-item ${activeTab === 'ods' ? 'active' : ''}`} onClick={() => setActiveTab('ods')}>
-          <Globe size={20} />
+          <Globe size={18} />
           <span>ODS</span>
         </button>
         <button className={`nav-item ${activeTab === 'logros' ? 'active' : ''}`} onClick={() => setActiveTab('logros')}>
-          <Award size={20} />
+          <Award size={18} />
           <span>Logros</span>
         </button>
+        <button className={`nav-item ${activeTab === 'noticias' ? 'active' : ''}`} onClick={() => setActiveTab('noticias')}>
+          <Newspaper size={18} />
+          <span>Noticias</span>
+        </button>
         <button className={`nav-item ${activeTab === 'planilla' ? 'active' : ''}`} onClick={() => setActiveTab('planilla')}>
-          <FileText size={20} />
+          <FileText size={18} />
           <span>Planilla</span>
         </button>
       </nav>
@@ -1059,7 +1126,7 @@ export default function App() {
 // ----------------------------------------------------
 // CHILD VIEWS: Los Primeros Pasos del Caminante
 // ----------------------------------------------------
-function PrimerosPasosView() {
+function PrimerosPasosView({ onNavigate }) {
   const [subTab, setSubTab] = useState('historia');
   
   return (
@@ -1101,7 +1168,7 @@ function PrimerosPasosView() {
           <div className="animate-fade-in-up">
             <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Nuestra Historia</h3>
             <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-              La Comunidad de Caminantes del GS Paola Prince se fundó en <strong>septiembre de 2025</strong>. Sus miembros fundadores son Nikol y Janiuska Mendoza, Kamila Morales, Victoria Villalobos y José (Mineco) González.
+              La Comunidad de Caminantes del GS Paola Prince se fundó <strong>el 6 de septiembre de 2025</strong>. Sus miembros fundadores son Nikol y Janiuska Mendoza, Kamila Morales, Victoria Villalobos y José (Mineco) González.
             </p>
             <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
               Poco después se unieron Jhuliana García, Jesus Rodriguez y Angel Fuenmayor, dando paso a la conformación de los primeros dos equipos permanentes de la unidad: <strong>Desmond Doss</strong> y <strong>Apollo 11</strong>.
@@ -1113,8 +1180,8 @@ function PrimerosPasosView() {
             <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
               <h4 style={{ fontSize: '13px', color: '#fff', marginBottom: '4px' }}>¿Equipos o Grupos?</h4>
               <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                <strong>Los Equipos</strong> son permanentes (3 a 6 miembros), tienen un nombre de personaje histórico inspirador y un rol específico para cada integrante. <br />
-                <strong>Los Grupos de Trabajo</strong> son temporales, se unen para realizar un proyecto en particular y se disuelven al culminar.
+                <strong>Equipos:</strong> Los equipos son permanentes (3 a 6 miembros), tienen el nombre de un personaje o <strong>hecho histórico</strong> inspirador, <strong>es liderado por un coordinador nombrado por el mismo equipo y cambia cada cierto tiempo.</strong> <br />
+                <strong>Grupos de Trabajo:</strong> Los grupos de trabajo son temporales <strong>y se forman con Caminantes de cualquier equipo, incluso de otras Comunidades para realizar una tarea, servicios o un proyecto</strong> en particular, <strong>ya que al cumplir el objetivo se disuelve.</strong>
               </p>
             </div>
           </div>
@@ -1165,6 +1232,20 @@ function PrimerosPasosView() {
 
         {subTab === 'mire-duras' && (
           <div className="animate-fade-in-up">
+            {/* LAS ACTIVIDADES - Texto introductorio con enlaces interactivos */}
+            <div className="glass-panel" style={{ marginBottom: '20px' }}>
+              <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff' }}>Las Actividades</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
+                En la Comunidad algunas actividades son diseñadas por los adultos, otras son diseñadas por los equipos permanentes, aunque también pueden ser diseñadas por una sola persona o por un grupo de trabajo temporal, en este último caso se trata en su mayoría de proyectos comunitarios o servicios.
+              </p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
+                Estas actividades no deben realizarse al azar, todas deben estar enmarcadas en la planificación de la unidad, deben estar vinculadas a los Objetivos de Desarrollo Sostenible ODS de la agenda 2030 de las Naciones Unidas <a className="inline-link" onClick={() => onNavigate('ods')}>(ver ODS)</a>, también deben estar orientadas al cumplimiento de las conductas indicadas en los Indicadores de Logro de la ASV <a className="inline-link" onClick={() => onNavigate('logros')}>(ver Indicadores de Logro)</a>. También deben existir objetivos específicos propios de la realidad de cada comunidad, equipo, grupo de trabajo o joven.
+              </p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: 1.7 }}>
+                Existen muchos formatos para diseñar actividades scout, sin embargo, se propone uno que se adapta muy bien a las necesidades de los Caminantes <a className="inline-link" onClick={() => onNavigate('planilla')}>(ver Generador de Planilla)</a>, también se recomienda prestar atención a dos herramientas que se pueden combinar para programar una actividad:
+              </p>
+            </div>
+
             <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Método de Diseño de Actividades</h3>
             
             <div style={{ marginBottom: '20px' }}>
@@ -1421,6 +1502,93 @@ function LogrosExplorer({ catalog }) {
         </div>
       </div>
 
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// CHILD VIEWS: Galería de Fotos de la Tropa (Zoom dinámico)
+// ----------------------------------------------------
+function TropaGallery() {
+  const [zoomedPhoto, setZoomedPhoto] = useState(null);
+
+  return (
+    <div className="glass-panel" style={{ marginBottom: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Camera size={20} style={{ color: 'var(--river-blue)' }} />
+        Galería de la Tropa
+      </h3>
+      <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '15px' }}>
+        Toca una foto para ampliarla.
+      </p>
+      <div className="tropa-gallery">
+        {TROPA_PHOTOS.map(photo => (
+          <div 
+            key={photo.id} 
+            className="tropa-thumb"
+            onClick={() => setZoomedPhoto(photo)}
+          >
+            <img src={photo.src} alt={photo.caption} loading="lazy" />
+          </div>
+        ))}
+      </div>
+
+      {/* Modal de zoom */}
+      {zoomedPhoto && (
+        <div className="photo-zoom-overlay" onClick={() => setZoomedPhoto(null)}>
+          <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
+            <button className="photo-zoom-close" onClick={() => setZoomedPhoto(null)}>
+              <X size={24} />
+            </button>
+            <img src={zoomedPhoto.src} alt={zoomedPhoto.caption} />
+            <p className="photo-zoom-caption">{zoomedPhoto.caption}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// CHILD VIEWS: Noticias y Novedades
+// ----------------------------------------------------
+function NoticiasView() {
+  const formatDate = (dateStr) => {
+    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const d = new Date(dateStr);
+    return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
+  };
+
+  return (
+    <div className="animate-fade-in-up">
+      <h2 className="section-title">Noticias y Novedades</h2>
+      <p className="section-subtitle">Mantente al día con las últimas actividades de la tropa.</p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {NOTICIAS.map(noticia => (
+          <div key={noticia.id} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
+            {noticia.foto && (
+              <div style={{ width: '100%', height: '160px', overflow: 'hidden' }}>
+                <img 
+                  src={noticia.foto} 
+                  alt={noticia.titulo} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            )}
+            <div style={{ padding: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <Calendar size={14} style={{ color: 'var(--river-blue)' }} />
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                  {formatDate(noticia.fecha)}
+                </span>
+              </div>
+              <h3 style={{ fontSize: '16px', color: '#fff', marginBottom: '8px' }}>{noticia.titulo}</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{noticia.texto}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

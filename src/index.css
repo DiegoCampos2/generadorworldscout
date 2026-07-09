@@ -252,7 +252,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 10px;
   font-family: var(--font-hero);
   font-weight: 500;
   text-decoration: none;
@@ -260,7 +260,7 @@ h1, h2, h3, h4, h5, h6 {
   background: none;
   border: none;
   cursor: pointer;
-  width: 20%;
+  width: 16.66%;
 }
 
 .nav-item.active {
@@ -350,4 +350,121 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 13px;
     padding: 8px 6px;
   }
+}
+
+/* Inline interactive links */
+.inline-link {
+  color: var(--river-blue);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.inline-link:hover {
+  color: var(--ocean-blue);
+  text-decoration-style: solid;
+}
+
+/* Tropa gallery grid */
+.tropa-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.tropa-thumb {
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.tropa-thumb:hover {
+  transform: scale(1.05);
+  border-color: var(--river-blue);
+}
+
+.tropa-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.2s;
+}
+
+.tropa-thumb:hover img {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 380px) {
+  .tropa-gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Photo zoom modal */
+.photo-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInUp 0.3s ease forwards;
+  padding: 20px;
+}
+
+.photo-zoom-container {
+  position: relative;
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.photo-zoom-container img {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+}
+
+.photo-zoom-caption {
+  padding: 12px 16px;
+  background: rgba(21, 2, 38, 0.9);
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+}
+
+.photo-zoom-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.photo-zoom-close:hover {
+  background: var(--fire-red);
 }

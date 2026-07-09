@@ -469,6 +469,39 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--fire-red);
 }
 
+/* Google button */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  color: #3c4043;
+  font-family: var(--font-body);
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-google:hover {
+  background: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-google:active {
+  transform: scale(0.98);
+}
+
+.btn-google:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Auth modal */
 .auth-modal {
   position: relative;

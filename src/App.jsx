@@ -537,11 +537,24 @@ export default function App() {
               </div>
             </div>
 
-            {/* GALERÍA DE FOTOS DE LA TROPA */}
+            {/* GALERÍA DE FOTOS DE LA COMUNIDAD */}
             <TropaGallery user={user} userRole={userRole} />
           </div>
         )}
 
+        {/* CONTENIDO PROTEGIDO: Solo visible para usuarios autenticados */}
+        {!user && !authLoading && (
+          <div className="glass-panel" style={{ textAlign: 'center', padding: '30px 20px', marginTop: '20px' }}>
+            <LogIn size={40} style={{ color: 'var(--river-blue)', marginBottom: '15px' }} />
+            <h3 style={{ fontSize: '18px', color: '#fff', marginBottom: '10px' }}>Inicia sesión para continuar</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>
+              Para acceder a los Primeros Pasos, ODS, Indicadores de Logro, Noticias y el Generador de Planillas, debes iniciar sesión o registrarte.
+            </p>
+          </div>
+        )}
+
+        {user && (
+          <>
         {/* TAB 2: PRIMEROS PASOS */}
         {activeTab === 'primeros-pasos' && <PrimerosPasosView onNavigate={setActiveTab} />}
 
@@ -1163,7 +1176,8 @@ export default function App() {
 
           </div>
         )}
-
+        </>
+        )}
       </main>
 
       {/* MOBILE BAR NAVIGATION */}
@@ -1172,26 +1186,30 @@ export default function App() {
           <Home size={18} />
           <span>Inicio</span>
         </button>
-        <button className={`nav-item ${activeTab === 'primeros-pasos' ? 'active' : ''}`} onClick={() => setActiveTab('primeros-pasos')}>
-          <Compass size={18} />
-          <span>Pasos</span>
-        </button>
-        <button className={`nav-item ${activeTab === 'ods' ? 'active' : ''}`} onClick={() => setActiveTab('ods')}>
-          <Globe size={18} />
-          <span>ODS</span>
-        </button>
-        <button className={`nav-item ${activeTab === 'logros' ? 'active' : ''}`} onClick={() => setActiveTab('logros')}>
-          <Award size={18} />
-          <span>Logros</span>
-        </button>
-        <button className={`nav-item ${activeTab === 'noticias' ? 'active' : ''}`} onClick={() => setActiveTab('noticias')}>
-          <Newspaper size={18} />
-          <span>Noticias</span>
-        </button>
-        <button className={`nav-item ${activeTab === 'planilla' ? 'active' : ''}`} onClick={() => setActiveTab('planilla')}>
-          <FileText size={18} />
-          <span>Planilla</span>
-        </button>
+        {user && (
+          <>
+            <button className={`nav-item ${activeTab === 'primeros-pasos' ? 'active' : ''}`} onClick={() => setActiveTab('primeros-pasos')}>
+              <Compass size={18} />
+              <span>Pasos</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'ods' ? 'active' : ''}`} onClick={() => setActiveTab('ods')}>
+              <Globe size={18} />
+              <span>ODS</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'logros' ? 'active' : ''}`} onClick={() => setActiveTab('logros')}>
+              <Award size={18} />
+              <span>Logros</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'noticias' ? 'active' : ''}`} onClick={() => setActiveTab('noticias')}>
+              <Newspaper size={18} />
+              <span>Noticias</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'planilla' ? 'active' : ''}`} onClick={() => setActiveTab('planilla')}>
+              <FileText size={18} />
+              <span>Planilla</span>
+            </button>
+          </>
+        )}
       </nav>
     </div>
   );
@@ -1621,7 +1639,7 @@ function TropaGallery({ user, userRole }) {
     <div className="glass-panel" style={{ marginBottom: '20px' }}>
       <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Camera size={20} style={{ color: 'var(--river-blue)' }} />
-        Galería de la Tropa
+        Galería de la Comunidad
         {canEdit && (
           <button className="btn-secondary" style={{ marginLeft: 'auto', padding: '4px 10px', fontSize: '11px' }} onClick={() => setShowUpload(!showUpload)}>
             <Plus size={12} /> Subir foto

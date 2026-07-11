@@ -1672,12 +1672,50 @@ function LogrosExplorer({ catalog }) {
 
       {/* Zoom modal for section images */}
       {zoomImg && createPortal(
-        <div className="photo-zoom-overlay" onClick={() => setZoomImg(null)}>
-          <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
-            <button className="photo-zoom-close" onClick={() => setZoomImg(null)}>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.9)',
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }} onClick={() => setZoomImg(null)}>
+          <div style={{
+            position: 'relative',
+            maxWidth: '90vw',
+            maxHeight: '85vh',
+            borderRadius: '16px',
+            overflow: 'hidden'
+          }} onClick={e => e.stopPropagation()}>
+            <button style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              background: 'rgba(0, 0, 0, 0.7)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff',
+              zIndex: 10
+            }} onClick={() => setZoomImg(null)}>
               <X size={24} />
             </button>
-            <img src={zoomImg} alt="" />
+            <img src={zoomImg} alt="" style={{
+              width: '100%',
+              maxHeight: '85vh',
+              objectFit: 'contain',
+              display: 'block'
+            }} />
           </div>
         </div>,
         document.body
@@ -1766,12 +1804,50 @@ function TropaGallery({ user, userRole }) {
       </div>
 
       {zoomedPhoto && createPortal(
-        <div className="photo-zoom-overlay" onClick={() => setZoomedPhoto(null)}>
-          <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
-            <button className="photo-zoom-close" onClick={() => setZoomedPhoto(null)}>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.9)',
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }} onClick={() => setZoomedPhoto(null)}>
+          <div style={{
+            position: 'relative',
+            maxWidth: '90vw',
+            maxHeight: '85vh',
+            borderRadius: '16px',
+            overflow: 'hidden'
+          }} onClick={e => e.stopPropagation()}>
+            <button style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              background: 'rgba(0, 0, 0, 0.7)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff',
+              zIndex: 10
+            }} onClick={() => setZoomedPhoto(null)}>
               <X size={24} />
             </button>
-            <img src={zoomedPhoto.src} alt="Foto de la comunidad" />
+            <img src={zoomedPhoto.src} alt="Foto de la comunidad" style={{
+              width: '100%',
+              maxHeight: '85vh',
+              objectFit: 'contain',
+              display: 'block'
+            }} />
           </div>
         </div>,
         document.body

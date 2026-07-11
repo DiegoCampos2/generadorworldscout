@@ -28,7 +28,7 @@ export function useInView(options = {}) {
 }
 
 export function ScrollReveal({ children, delay = 0, className = '', style = {} }) {
-  const [ref, inView] = useInView({ resetOnExit: true });
+  const [ref, inView] = useInView();
 
   return (
     <div

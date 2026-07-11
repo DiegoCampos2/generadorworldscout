@@ -482,6 +482,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .clickable-image {
   cursor: pointer;
+  pointer-events: auto;
+  position: relative;
 }
 
 .clickable-image:hover {
@@ -510,6 +512,7 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
 }
 
 .scroll-reveal--visible {

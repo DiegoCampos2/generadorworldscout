@@ -1515,7 +1515,7 @@ function OdsExplorer({ catalog }) {
             {selectedOds.description}
           </p>
 
-          <h4 style={{ fontSize: '12.5px', color: 'var(--river-blue)', marginBottom: '8px', letterSpacing: '0.05em' }}>METAS ESPECÍFICAS (ANEXO 1):</h4>
+          <h4 style={{ fontSize: '12.5px', color: 'var(--river-blue)', marginBottom: '8px', letterSpacing: '0.05em' }}>METAS ESPECÍFICAS:</h4>
           <ul style={{ paddingLeft: '15px', listStyleType: 'disc', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {selectedOds.metas.map((meta, idx) => (
               <li key={idx} style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{meta}</li>

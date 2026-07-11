@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   Home, 
@@ -148,6 +148,7 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [globalZoomImg, setGlobalZoomImg] = useState(null);
 
   // Listen to auth state changes
   useEffect(() => {
@@ -499,6 +500,18 @@ export default function App() {
         />
       )}
 
+      {/* IMAGE ZOOM MODAL */}
+      {globalZoomImg && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.9)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setGlobalZoomImg(null)}>
+          <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '85vh', borderRadius: '16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            <button style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', zIndex: 10 }} onClick={() => setGlobalZoomImg(null)}>
+              <X size={24} />
+            </button>
+            <img src={globalZoomImg} alt="" style={{ width: '100%', maxHeight: '85vh', objectFit: 'contain', display: 'block' }} />
+          </div>
+        </div>
+      )}
+
       {/* APP ROOT BODY */}
       <main className="app-container">
         
@@ -571,7 +584,7 @@ export default function App() {
         {user && (
           <>
         {/* TAB 2: PRIMEROS PASOS */}
-        {activeTab === 'primeros-pasos' && <PrimerosPasosView onNavigate={setActiveTab} />}
+        {activeTab === 'primeros-pasos' && <PrimerosPasosView onNavigate={setActiveTab} onZoomImage={setGlobalZoomImg} />}
 
         {/* TAB 3: ODS CATALOG */}
         {activeTab === 'ods' && (
@@ -1233,13 +1246,8 @@ export default function App() {
 // ----------------------------------------------------
 // CHILD VIEWS: Los Primeros Pasos del Caminante
 // ----------------------------------------------------
-function PrimerosPasosView({ onNavigate }) {
+function PrimerosPasosView({ onNavigate, onZoomImage }) {
   const [subTab, setSubTab] = useState('historia');
-  const [zoomImg, setZoomImg] = useState(null);
-  const historiaRef = useRef(null);
-  const equiposRef = useRef(null);
-  const actividadesRef = useRef(null);
-  const reunionesRef = useRef(null);
   
   return (
     <div className="animate-fade-in-up">
@@ -1280,7 +1288,7 @@ function PrimerosPasosView({ onNavigate }) {
           <div className="pasos-layout">
             <div className="pasos-content">
               <ScrollReveal>
-                <div ref={historiaRef}>
+                <div>
                   <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Nuestra Historia</h3>
                   <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
                     La Comunidad de Caminantes del GS Paola Prince se fundó <strong>el 6 de septiembre de 2025</strong>. Sus miembros fundadores son Nikol y Janiuska Mendoza, Kamila Morales, Victoria Villalobos y José (Mineco) González.
@@ -1295,13 +1303,13 @@ function PrimerosPasosView({ onNavigate }) {
               </ScrollReveal>
 
               <ScrollReveal delay={100}>
-                <div onClick={() => setZoomImg(imgHistoria)} style={{ cursor: 'pointer', marginTop: '15px' }}>
+                <div onClick={() => onZoomImage(imgHistoria)} style={{ cursor: 'pointer', marginTop: '15px' }}>
                   <img src={imgHistoria} alt="Nuestra Historia" className="section-image" />
                 </div>
               </ScrollReveal>
 
               <ScrollReveal delay={150}>
-                <div ref={equiposRef} style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
+                <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
                   <h4 style={{ fontSize: '13px', color: '#fff', marginBottom: '4px' }}>¿Equipos o Grupos?</h4>
                   <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                     <strong>Equipos:</strong> Los equipos son permanentes (3 a 6 miembros), tienen el nombre de un personaje o <strong>hecho histórico</strong> inspirador, <strong>es liderado por un coordinador nombrado por el mismo equipo y cambia cada cierto tiempo.</strong> <br />
@@ -1312,10 +1320,10 @@ function PrimerosPasosView({ onNavigate }) {
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <div onClick={() => setZoomImg(imgEquipos1)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgEquipos1)} style={{ cursor: 'pointer' }}>
                     <img src={imgEquipos1} alt="Equipos" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgEquipos2)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgEquipos2)} style={{ cursor: 'pointer' }}>
                     <img src={imgEquipos2} alt="Equipos" className="section-image" />
                   </div>
                 </div>
@@ -1386,20 +1394,20 @@ function PrimerosPasosView({ onNavigate }) {
               </ScrollReveal>
 
               <ScrollReveal delay={100}>
-                <div ref={actividadesRef}>
+                <div>
                   <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Método de Diseño de Actividades</h3>
                 </div>
               </ScrollReveal>
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-                  <div onClick={() => setZoomImg(imgActividades1)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgActividades1)} style={{ cursor: 'pointer' }}>
                     <img src={imgActividades1} alt="Actividades" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgActividades2)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgActividades2)} style={{ cursor: 'pointer' }}>
                     <img src={imgActividades2} alt="Actividades" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgActividades3)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgActividades3)} style={{ cursor: 'pointer' }}>
                     <img src={imgActividades3} alt="Actividades" className="section-image" />
                   </div>
                 </div>
@@ -1443,7 +1451,7 @@ function PrimerosPasosView({ onNavigate }) {
           <div className="pasos-layout">
             <div className="pasos-content">
               <ScrollReveal>
-                <div ref={reunionesRef}>
+                <div>
                   <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Tipos de Reuniones (Estructura y Toma de Decisiones)</h3>
                   <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '12px' }}>
                     En los Caminantes, tú y tu equipo participan protagónicamente en la toma de decisiones a través de estas estructuras de reunión:
@@ -1488,19 +1496,19 @@ function PrimerosPasosView({ onNavigate }) {
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
-                  <div onClick={() => setZoomImg(imgReuniones1)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgReuniones1)} style={{ cursor: 'pointer' }}>
                     <img src={imgReuniones1} alt="Reuniones" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgReuniones2)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgReuniones2)} style={{ cursor: 'pointer' }}>
                     <img src={imgReuniones2} alt="Reuniones" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgReuniones3)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgReuniones3)} style={{ cursor: 'pointer' }}>
                     <img src={imgReuniones3} alt="Reuniones" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgReuniones4)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgReuniones4)} style={{ cursor: 'pointer' }}>
                     <img src={imgReuniones4} alt="Reuniones" className="section-image" />
                   </div>
-                  <div onClick={() => setZoomImg(imgReuniones5)} style={{ cursor: 'pointer' }}>
+                  <div onClick={() => onZoomImage(imgReuniones5)} style={{ cursor: 'pointer' }}>
                     <img src={imgReuniones5} alt="Reuniones" className="section-image" />
                   </div>
                 </div>
@@ -1691,57 +1699,6 @@ function LogrosExplorer({ catalog }) {
           </div>
         </div>
       </div>
-
-      {/* Zoom modal for section images */}
-      {zoomImg && createPortal(
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.9)',
-          zIndex: 99999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }} onClick={() => setZoomImg(null)}>
-          <div style={{
-            position: 'relative',
-            maxWidth: '90vw',
-            maxHeight: '85vh',
-            borderRadius: '16px',
-            overflow: 'hidden'
-          }} onClick={e => e.stopPropagation()}>
-            <button style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              background: 'rgba(0, 0, 0, 0.7)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#fff',
-              zIndex: 10
-            }} onClick={() => setZoomImg(null)}>
-              <X size={24} />
-            </button>
-            <img src={zoomImg} alt="" style={{
-              width: '100%',
-              maxHeight: '85vh',
-              objectFit: 'contain',
-              display: 'block'
-            }} />
-          </div>
-        </div>,
-        document.body
-      )}
 
     </div>
   );

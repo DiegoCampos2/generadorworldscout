@@ -469,6 +469,33 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--fire-red);
 }
 
+/* Section images for Pasos module */
+.section-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (min-width: 600px) {
+  .section-image {
+    height: 220px;
+  }
+}
+
+@media (max-width: 380px) {
+  .section-image {
+    height: 130px;
+  }
+  .section-image-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
 /* Google button */
 .btn-google {
   width: 100%;

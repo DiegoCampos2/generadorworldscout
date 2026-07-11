@@ -113,6 +113,19 @@ const TROPA_PHOTOS_DEFAULT = [
   { id: 25, src: tropaPhoto25 },
 ];
 
+// --- Pasos module images ---
+import imgHistoria from './assets/images/pasos/historia.jpeg';
+import imgEquipos1 from './assets/images/pasos/equipos1 (1).jpeg';
+import imgEquipos2 from './assets/images/pasos/equipos1 (2).jpeg';
+import imgActividades1 from './assets/images/pasos/actividades.jpeg';
+import imgActividades2 from './assets/images/pasos/actividades (1).jpeg';
+import imgActividades3 from './assets/images/pasos/actividades (2).jpeg';
+import imgReuniones1 from './assets/images/pasos/reuniones (1).jpeg';
+import imgReuniones2 from './assets/images/pasos/reuniones (2).jpeg';
+import imgReuniones3 from './assets/images/pasos/reuniones (3).jpeg';
+import imgReuniones4 from './assets/images/pasos/reuniones (4).jpeg';
+import imgReuniones5 from './assets/images/pasos/reuniones (5).jpeg';
+
 // --- Firebase imports ---
 import { db, auth, googleProvider } from './firebase';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
@@ -1265,9 +1278,11 @@ function PrimerosPasosView({ onNavigate }) {
             <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
               Poco después se unieron Jhuliana García, Jesus Rodriguez y Angel Fuenmayor, dando paso a la conformación de los primeros dos equipos permanentes de la unidad: <strong>Desmond Doss</strong> y <strong>Apollo 11</strong>.
             </p>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
-              Estuvieron acompañados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson Márquez.
+<p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
+              Estuvieron acompa\u00f1ados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson M\u00e1rquez.
             </p>
+
+            <img src={imgHistoria} alt="Nuestra Historia" className="section-image animate-fade-in-up" style={{ marginTop: '15px' }} />
             
             <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
               <h4 style={{ fontSize: '13px', color: '#fff', marginBottom: '4px' }}>¿Equipos o Grupos?</h4>
@@ -1275,6 +1290,11 @@ function PrimerosPasosView({ onNavigate }) {
                 <strong>Equipos:</strong> Los equipos son permanentes (3 a 6 miembros), tienen el nombre de un personaje o <strong>hecho histórico</strong> inspirador, <strong>es liderado por un coordinador nombrado por el mismo equipo y cambia cada cierto tiempo.</strong> <br />
                 <strong>Grupos de Trabajo:</strong> Los grupos de trabajo son temporales <strong>y se forman con Caminantes de cualquier equipo, incluso de otras Comunidades para realizar una tarea, servicios o un proyecto</strong> en particular, <strong>ya que al cumplir el objetivo se disuelve.</strong>
               </p>
+            </div>
+
+            <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <img src={imgEquipos1} alt="Equipos" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
+              <img src={imgEquipos2} alt="Equipos" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
             </div>
           </div>
         )}
@@ -1340,7 +1360,13 @@ function PrimerosPasosView({ onNavigate }) {
 
             <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Método de Diseño de Actividades</h3>
             
-            <div style={{ marginBottom: '20px' }}>
+            <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+              <img src={imgActividades1} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
+              <img src={imgActividades2} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
+              <img src={imgActividades3} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.3s' }} />
+            </div>
+
+          <div style={{ marginBottom: '20px' }}>
               <h4 style={{ fontSize: '14px', color: 'var(--blossom-pink)', marginBottom: '8px' }}>Herramienta MIRE</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px', lineHeight: '1.5' }}>
                 <strong>Motivación, Instrucción, Refuerzo y Evaluación:</strong>
@@ -1407,6 +1433,14 @@ function PrimerosPasosView({ onNavigate }) {
                   <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{r.desc}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
+              <img src={imgReuniones1} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
+              <img src={imgReuniones2} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
+              <img src={imgReuniones3} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.3s' }} />
+              <img src={imgReuniones4} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.4s' }} />
+              <img src={imgReuniones5} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.5s' }} />
             </div>
           </div>
         )}

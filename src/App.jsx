@@ -1279,7 +1279,7 @@ function PrimerosPasosView({ onNavigate }) {
               Poco después se unieron Jhuliana García, Jesus Rodriguez y Angel Fuenmayor, dando paso a la conformación de los primeros dos equipos permanentes de la unidad: <strong>Desmond Doss</strong> y <strong>Apollo 11</strong>.
             </p>
 <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
-              Estuvieron acompa\u00f1ados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson M\u00e1rquez.
+              Estuvieron acompañados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson Márquez.
             </p>
 
             <img src={imgHistoria} alt="Nuestra Historia" className="section-image animate-fade-in-up" style={{ marginTop: '15px' }} />

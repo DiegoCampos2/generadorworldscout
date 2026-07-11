@@ -1234,40 +1234,11 @@ export default function App() {
 // ----------------------------------------------------
 function PrimerosPasosView({ onNavigate }) {
   const [subTab, setSubTab] = useState('historia');
+  const [zoomImg, setZoomImg] = useState(null);
   const historiaRef = useRef(null);
   const equiposRef = useRef(null);
   const actividadesRef = useRef(null);
   const reunionesRef = useRef(null);
-  
-  const [activeStickyImg, setActiveStickyImg] = useState(0);
-
-  useEffect(() => {
-    if (subTab !== 'historia' && subTab !== 'mire-duras' && subTab !== 'reuniones') return;
-    const refs = subTab === 'historia' ? [historiaRef, equiposRef] : subTab === 'mire-duras' ? [actividadesRef] : [reunionesRef];
-    const observers = [];
-    refs.forEach((ref, idx) => {
-      if (!ref.current) return;
-      const obs = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) setActiveStickyImg(idx);
-      }, { threshold: 0.4, rootMargin: '-25% 0px -25% 0px' });
-      obs.observe(ref.current);
-      observers.push(obs);
-    });
-    return () => observers.forEach(o => o.disconnect());
-  }, [subTab]);
-
-  const stickyImagesHistoria = [
-    [imgHistoria],
-    [imgEquipos1, imgEquipos2]
-  ];
-  const stickyImagesActividades = [
-    [imgActividades1, imgActividades2, imgActividades3]
-  ];
-  const stickyImagesReuniones = [
-    [imgReuniones1, imgReuniones2, imgReuniones3, imgReuniones4, imgReuniones5]
-  ];
-
-  const currentStickyImages = subTab === 'historia' ? stickyImagesHistoria : subTab === 'mire-duras' ? stickyImagesActividades : subTab === 'reuniones' ? stickyImagesReuniones : [];
   
   return (
     <div className="animate-fade-in-up">
@@ -1306,20 +1277,6 @@ function PrimerosPasosView({ onNavigate }) {
       <div className="glass-panel" style={{ minHeight: '250px' }}>
         {subTab === 'historia' && (
           <div className="pasos-layout">
-            {/* Desktop sticky image */}
-            <div className="pasos-sticky-desktop">
-              <div className="sticky-image-container">
-                {currentStickyImages.map((imgs, idx) => (
-                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
-                    {imgs.map((src, i) => (
-                      <img key={i} src={src} alt="" />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Text content with scroll reveals */}
             <div className="pasos-content">
               <ScrollReveal>
                 <div ref={historiaRef}>
@@ -1336,9 +1293,8 @@ function PrimerosPasosView({ onNavigate }) {
                 </div>
               </ScrollReveal>
 
-              {/* Mobile-only inline image */}
-              <ScrollReveal delay={100} className="pasos-mobile-only">
-                <img src={imgHistoria} alt="Nuestra Historia" className="section-image" style={{ marginTop: '15px' }} />
+              <ScrollReveal delay={100}>
+                <img src={imgHistoria} alt="Nuestra Historia" className="section-image clickable-image" style={{ marginTop: '15px' }} onClick={() => setZoomImg(imgHistoria)} />
               </ScrollReveal>
 
               <ScrollReveal delay={150}>
@@ -1351,11 +1307,10 @@ function PrimerosPasosView({ onNavigate }) {
                 </div>
               </ScrollReveal>
 
-              {/* Mobile-only inline images */}
-              <ScrollReveal delay={100} className="pasos-mobile-only">
+              <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <img src={imgEquipos1} alt="Equipos" className="section-image" />
-                  <img src={imgEquipos2} alt="Equipos" className="section-image" />
+                  <img src={imgEquipos1} alt="Equipos" className="section-image clickable-image" onClick={() => setZoomImg(imgEquipos1)} />
+                  <img src={imgEquipos2} alt="Equipos" className="section-image clickable-image" onClick={() => setZoomImg(imgEquipos2)} />
                 </div>
               </ScrollReveal>
             </div>
@@ -1407,19 +1362,6 @@ function PrimerosPasosView({ onNavigate }) {
 
         {subTab === 'mire-duras' && (
           <div className="pasos-layout">
-            {/* Desktop sticky image */}
-            <div className="pasos-sticky-desktop">
-              <div className="sticky-image-container">
-                {currentStickyImages.map((imgs, idx) => (
-                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
-                    {imgs.map((src, i) => (
-                      <img key={i} src={src} alt="" />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="pasos-content">
               <ScrollReveal>
                 <div className="glass-panel" style={{ marginBottom: '20px' }}>
@@ -1442,12 +1384,11 @@ function PrimerosPasosView({ onNavigate }) {
                 </div>
               </ScrollReveal>
 
-              {/* Mobile-only inline images */}
-              <ScrollReveal delay={100} className="pasos-mobile-only">
+              <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-                  <img src={imgActividades1} alt="Actividades" className="section-image" />
-                  <img src={imgActividades2} alt="Actividades" className="section-image" />
-                  <img src={imgActividades3} alt="Actividades" className="section-image" />
+                  <img src={imgActividades1} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades1)} />
+                  <img src={imgActividades2} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades2)} />
+                  <img src={imgActividades3} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades3)} />
                 </div>
               </ScrollReveal>
 
@@ -1487,19 +1428,6 @@ function PrimerosPasosView({ onNavigate }) {
 
         {subTab === 'reuniones' && (
           <div className="pasos-layout">
-            {/* Desktop sticky image */}
-            <div className="pasos-sticky-desktop">
-              <div className="sticky-image-container">
-                {currentStickyImages.map((imgs, idx) => (
-                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
-                    {imgs.map((src, i) => (
-                      <img key={i} src={src} alt="" />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="pasos-content">
               <ScrollReveal>
                 <div ref={reunionesRef}>
@@ -1545,14 +1473,13 @@ function PrimerosPasosView({ onNavigate }) {
                 ))}
               </div>
 
-              {/* Mobile-only inline images */}
-              <ScrollReveal delay={100} className="pasos-mobile-only">
+              <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
-                  <img src={imgReuniones1} alt="Reuniones" className="section-image" />
-                  <img src={imgReuniones2} alt="Reuniones" className="section-image" />
-                  <img src={imgReuniones3} alt="Reuniones" className="section-image" />
-                  <img src={imgReuniones4} alt="Reuniones" className="section-image" />
-                  <img src={imgReuniones5} alt="Reuniones" className="section-image" />
+                  <img src={imgReuniones1} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones1)} />
+                  <img src={imgReuniones2} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones2)} />
+                  <img src={imgReuniones3} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones3)} />
+                  <img src={imgReuniones4} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones4)} />
+                  <img src={imgReuniones5} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones5)} />
                 </div>
               </ScrollReveal>
             </div>
@@ -1742,10 +1669,24 @@ function LogrosExplorer({ catalog }) {
         </div>
       </div>
 
+      {/* Zoom modal for section images */}
+      {zoomImg && (
+        <div className="photo-zoom-overlay" onClick={() => setZoomImg(null)}>
+          <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
+            <button className="photo-zoom-close" onClick={() => setZoomImg(null)}>
+              <X size={24} />
+            </button>
+            <img src={zoomImg} alt="" />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
 
+// ----------------------------------------------------
+// CHILD VIEWS: Galería de Fotos de la Comunidad (Zoom dinámico + Firebase)
 // ----------------------------------------------------
 // CHILD VIEWS: Galería de Fotos de la Tropa (Zoom dinámico + Firebase)
 // ----------------------------------------------------

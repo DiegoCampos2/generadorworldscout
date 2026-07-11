@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Home, 
   Compass, 
@@ -1670,7 +1671,7 @@ function LogrosExplorer({ catalog }) {
       </div>
 
       {/* Zoom modal for section images */}
-      {zoomImg && (
+      {zoomImg && createPortal(
         <div className="photo-zoom-overlay" onClick={() => setZoomImg(null)}>
           <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
             <button className="photo-zoom-close" onClick={() => setZoomImg(null)}>
@@ -1678,7 +1679,8 @@ function LogrosExplorer({ catalog }) {
             </button>
             <img src={zoomImg} alt="" />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
@@ -1763,15 +1765,16 @@ function TropaGallery({ user, userRole }) {
         ))}
       </div>
 
-      {zoomedPhoto && (
+      {zoomedPhoto && createPortal(
         <div className="photo-zoom-overlay" onClick={() => setZoomedPhoto(null)}>
           <div className="photo-zoom-container" onClick={e => e.stopPropagation()}>
             <button className="photo-zoom-close" onClick={() => setZoomedPhoto(null)}>
               <X size={24} />
             </button>
-            <img src={zoomedPhoto.src} alt="Foto de la tropa" />
+            <img src={zoomedPhoto.src} alt="Foto de la comunidad" />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

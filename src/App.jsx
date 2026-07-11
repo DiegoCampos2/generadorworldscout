@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Home, 
   Compass, 
@@ -131,6 +131,7 @@ import { db, auth, googleProvider } from './firebase';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
 import { uploadToCloudinary } from './cloudinary';
+import { ScrollReveal } from './scrollReveal';
 
 // --- Novedades: Ahora se gestionan desde Firebase Firestore ---
 // Las noticias se cargan dinámicamente desde Firestore en NoticiasView.
@@ -1233,6 +1234,40 @@ export default function App() {
 // ----------------------------------------------------
 function PrimerosPasosView({ onNavigate }) {
   const [subTab, setSubTab] = useState('historia');
+  const historiaRef = useRef(null);
+  const equiposRef = useRef(null);
+  const actividadesRef = useRef(null);
+  const reunionesRef = useRef(null);
+  
+  const [activeStickyImg, setActiveStickyImg] = useState(0);
+
+  useEffect(() => {
+    if (subTab !== 'historia' && subTab !== 'mire-duras' && subTab !== 'reuniones') return;
+    const refs = subTab === 'historia' ? [historiaRef, equiposRef] : subTab === 'mire-duras' ? [actividadesRef] : [reunionesRef];
+    const observers = [];
+    refs.forEach((ref, idx) => {
+      if (!ref.current) return;
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) setActiveStickyImg(idx);
+      }, { threshold: 0.4, rootMargin: '-25% 0px -25% 0px' });
+      obs.observe(ref.current);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, [subTab]);
+
+  const stickyImagesHistoria = [
+    [imgHistoria],
+    [imgEquipos1, imgEquipos2]
+  ];
+  const stickyImagesActividades = [
+    [imgActividades1, imgActividades2, imgActividades3]
+  ];
+  const stickyImagesReuniones = [
+    [imgReuniones1, imgReuniones2, imgReuniones3, imgReuniones4, imgReuniones5]
+  ];
+
+  const currentStickyImages = subTab === 'historia' ? stickyImagesHistoria : subTab === 'mire-duras' ? stickyImagesActividades : subTab === 'reuniones' ? stickyImagesReuniones : [];
   
   return (
     <div className="animate-fade-in-up">
@@ -1270,31 +1305,59 @@ function PrimerosPasosView({ onNavigate }) {
 
       <div className="glass-panel" style={{ minHeight: '250px' }}>
         {subTab === 'historia' && (
-          <div className="animate-fade-in-up">
-            <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Nuestra Historia</h3>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-              La Comunidad de Caminantes del GS Paola Prince se fundó <strong>el 6 de septiembre de 2025</strong>. Sus miembros fundadores son Nikol y Janiuska Mendoza, Kamila Morales, Victoria Villalobos y José (Mineco) González.
-            </p>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-              Poco después se unieron Jhuliana García, Jesus Rodriguez y Angel Fuenmayor, dando paso a la conformación de los primeros dos equipos permanentes de la unidad: <strong>Desmond Doss</strong> y <strong>Apollo 11</strong>.
-            </p>
-<p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
-              Estuvieron acompañados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson Márquez.
-            </p>
-
-            <img src={imgHistoria} alt="Nuestra Historia" className="section-image animate-fade-in-up" style={{ marginTop: '15px' }} />
-            
-            <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
-              <h4 style={{ fontSize: '13px', color: '#fff', marginBottom: '4px' }}>¿Equipos o Grupos?</h4>
-              <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                <strong>Equipos:</strong> Los equipos son permanentes (3 a 6 miembros), tienen el nombre de un personaje o <strong>hecho histórico</strong> inspirador, <strong>es liderado por un coordinador nombrado por el mismo equipo y cambia cada cierto tiempo.</strong> <br />
-                <strong>Grupos de Trabajo:</strong> Los grupos de trabajo son temporales <strong>y se forman con Caminantes de cualquier equipo, incluso de otras Comunidades para realizar una tarea, servicios o un proyecto</strong> en particular, <strong>ya que al cumplir el objetivo se disuelve.</strong>
-              </p>
+          <div className="pasos-layout">
+            {/* Desktop sticky image */}
+            <div className="pasos-sticky-desktop">
+              <div className="sticky-image-container">
+                {currentStickyImages.map((imgs, idx) => (
+                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
+                    {imgs.map((src, i) => (
+                      <img key={i} src={src} alt="" />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-              <img src={imgEquipos1} alt="Equipos" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
-              <img src={imgEquipos2} alt="Equipos" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
+            {/* Text content with scroll reveals */}
+            <div className="pasos-content">
+              <ScrollReveal>
+                <div ref={historiaRef}>
+                  <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Nuestra Historia</h3>
+                  <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                    La Comunidad de Caminantes del GS Paola Prince se fundó <strong>el 6 de septiembre de 2025</strong>. Sus miembros fundadores son Nikol y Janiuska Mendoza, Kamila Morales, Victoria Villalobos y José (Mineco) González.
+                  </p>
+                  <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                    Poco después se unieron Jhuliana García, Jesus Rodriguez y Angel Fuenmayor, dando paso a la conformación de los primeros dos equipos permanentes de la unidad: <strong>Desmond Doss</strong> y <strong>Apollo 11</strong>.
+                  </p>
+                  <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
+                    Estuvieron acompañados por Fernando Acosta como Adulto de Unidad, y en apoyo Dayana Villasmil y Nelson Márquez.
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              {/* Mobile-only inline image */}
+              <ScrollReveal delay={100} className="pasos-mobile-only">
+                <img src={imgHistoria} alt="Nuestra Historia" className="section-image" style={{ marginTop: '15px' }} />
+              </ScrollReveal>
+
+              <ScrollReveal delay={150}>
+                <div ref={equiposRef} style={{ marginTop: '20px', padding: '12px', background: 'rgba(98, 37, 153, 0.15)', borderRadius: '10px', borderLeft: '3px solid var(--primary-scout)' }}>
+                  <h4 style={{ fontSize: '13px', color: '#fff', marginBottom: '4px' }}>¿Equipos o Grupos?</h4>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                    <strong>Equipos:</strong> Los equipos son permanentes (3 a 6 miembros), tienen el nombre de un personaje o <strong>hecho histórico</strong> inspirador, <strong>es liderado por un coordinador nombrado por el mismo equipo y cambia cada cierto tiempo.</strong> <br />
+                    <strong>Grupos de Trabajo:</strong> Los grupos de trabajo son temporales <strong>y se forman con Caminantes de cualquier equipo, incluso de otras Comunidades para realizar una tarea, servicios o un proyecto</strong> en particular, <strong>ya que al cumplir el objetivo se disuelve.</strong>
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              {/* Mobile-only inline images */}
+              <ScrollReveal delay={100} className="pasos-mobile-only">
+                <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <img src={imgEquipos1} alt="Equipos" className="section-image" />
+                  <img src={imgEquipos2} alt="Equipos" className="section-image" />
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         )}
@@ -1343,104 +1406,155 @@ function PrimerosPasosView({ onNavigate }) {
         )}
 
         {subTab === 'mire-duras' && (
-          <div className="animate-fade-in-up">
-            {/* LAS ACTIVIDADES - Texto introductorio con enlaces interactivos */}
-            <div className="glass-panel" style={{ marginBottom: '20px' }}>
-              <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff' }}>Las Actividades</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
-                En la Comunidad algunas actividades son diseñadas por los adultos, otras son diseñadas por los equipos permanentes, aunque también pueden ser diseñadas por una sola persona o por un grupo de trabajo temporal, en este último caso se trata en su mayoría de proyectos comunitarios o servicios.
-              </p>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
-                Estas actividades no deben realizarse al azar, todas deben estar enmarcadas en la planificación de la unidad, deben estar vinculadas a los Objetivos de Desarrollo Sostenible ODS de la agenda 2030 de las Naciones Unidas <a className="inline-link" onClick={() => onNavigate('ods')}>(ver ODS)</a>, también deben estar orientadas al cumplimiento de las conductas indicadas en los Indicadores de Logro de la ASV <a className="inline-link" onClick={() => onNavigate('logros')}>(ver Indicadores de Logro)</a>. También deben existir objetivos específicos propios de la realidad de cada comunidad, equipo, grupo de trabajo o joven.
-              </p>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: 1.7 }}>
-                Existen muchos formatos para diseñar actividades scout, sin embargo, se propone uno que se adapta muy bien a las necesidades de los Caminantes <a className="inline-link" onClick={() => onNavigate('planilla')}>(ver Generador de Planilla)</a>, también se recomienda prestar atención a dos herramientas que se pueden combinar para programar una actividad:
-              </p>
+          <div className="pasos-layout">
+            {/* Desktop sticky image */}
+            <div className="pasos-sticky-desktop">
+              <div className="sticky-image-container">
+                {currentStickyImages.map((imgs, idx) => (
+                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
+                    {imgs.map((src, i) => (
+                      <img key={i} src={src} alt="" />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Método de Diseño de Actividades</h3>
-            
-            <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-              <img src={imgActividades1} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
-              <img src={imgActividades2} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
-              <img src={imgActividades3} alt="Actividades" className="section-image animate-fade-in-up" style={{ animationDelay: '0.3s' }} />
-            </div>
+            <div className="pasos-content">
+              <ScrollReveal>
+                <div className="glass-panel" style={{ marginBottom: '20px' }}>
+                  <h3 style={{ marginBottom: '12px', fontSize: '18px', color: '#fff' }}>Las Actividades</h3>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
+                    En la Comunidad algunas actividades son diseñadas por los adultos, otras son diseñadas por los equipos permanentes, aunque también pueden ser diseñadas por una sola persona o por un grupo de trabajo temporal, en este último caso se trata en su mayoría de proyectos comunitarios o servicios.
+                  </p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '12px', lineHeight: 1.7 }}>
+                    Estas actividades no deben realizarse al azar, todas deben estar enmarcadas en la planificación de la unidad, deben estar vinculadas a los Objetivos de Desarrollo Sostenible ODS de la agenda 2030 de las Naciones Unidas <a className="inline-link" onClick={() => onNavigate('ods')}>(ver ODS)</a>, también deben estar orientadas al cumplimiento de las conductas indicadas en los Indicadores de Logro de la ASV <a className="inline-link" onClick={() => onNavigate('logros')}>(ver Indicadores de Logro)</a>. También deben existir objetivos específicos propios de la realidad de cada comunidad, equipo, grupo de trabajo o joven.
+                  </p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: 1.7 }}>
+                    Existen muchos formatos para diseñar actividades scout, sin embargo, se propone uno que se adapta muy bien a las necesidades de los Caminantes <a className="inline-link" onClick={() => onNavigate('planilla')}>(ver Generador de Planilla)</a>, también se recomienda prestar atención a dos herramientas que se pueden combinar para programar una actividad:
+                  </p>
+                </div>
+              </ScrollReveal>
 
-          <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '14px', color: 'var(--blossom-pink)', marginBottom: '8px' }}>Herramienta MIRE</h4>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px', lineHeight: '1.5' }}>
-                <strong>Motivación, Instrucción, Refuerzo y Evaluación:</strong>
-              </p>
-              <ul style={{ paddingLeft: '15px', listStyleType: 'disc', fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <li><strong>La Motivación</strong> se refiere a que toda actividad scout debe comenzar con buen ánimo, juegos cortos, de mucho movimiento del cuerpo, gritos, etc.</li>
-                <li><strong>La Instrucción</strong> se refiere a que toda actividad debe tener contenido educativo (no es estar en un salón de clases), prácticas de nudos, por ejemplo.</li>
-                <li><strong>El Refuerzo</strong> busca profundizar sobre algún objetivo que no haya quedado claro. Manteniendo como ejemplo una actividad de nudos, si en la instrucción aprendimos a hacer una silla de bomberos, en el refuerzo pediremos a los participantes hacer un juego de poleas levantando a una persona usando ese nudo.</li>
-                <li><strong>La Evaluación</strong> se refiere a realizar dinámicas, juegos o discusiones que permitan determinar si se cumplieron los objetivos de la actividad.</li>
-              </ul>
-            </div>
+              <ScrollReveal delay={100}>
+                <div ref={actividadesRef}>
+                  <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Método de Diseño de Actividades</h3>
+                </div>
+              </ScrollReveal>
 
-            <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '15px' }}>
-              <h4 style={{ fontSize: '14px', color: 'var(--leaf-green)', marginBottom: '8px' }}>Herramienta DURAS</h4>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '10px', lineHeight: '1.5' }}>
-                <strong>Criterios que deben cumplir las actividades para ser significativas:</strong>
-              </p>
-              <ul style={{ paddingLeft: '15px', listStyleType: 'disc', fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <li><strong>Desafiantes:</strong> y retadoras para los participantes.</li>
-                <li><strong>Útiles:</strong> y que tengan un propósito o enseñanza.</li>
-                <li><strong>Recompensantes:</strong> para que al finalizar la actividad el participante se sienta satisfecho con el tiempo invertido.</li>
-                <li><strong>Atractivas:</strong> buscando que sean del interés de todos los participantes.</li>
-                <li><strong>Seguras:</strong> orientadas siempre a evitar lesiones físicas y/o emocionales.</li>
-              </ul>
+              {/* Mobile-only inline images */}
+              <ScrollReveal delay={100} className="pasos-mobile-only">
+                <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  <img src={imgActividades1} alt="Actividades" className="section-image" />
+                  <img src={imgActividades2} alt="Actividades" className="section-image" />
+                  <img src={imgActividades3} alt="Actividades" className="section-image" />
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={150}>
+                <div style={{ marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '14px', color: 'var(--blossom-pink)', marginBottom: '8px' }}>Herramienta MIRE</h4>
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px', lineHeight: '1.5' }}>
+                    <strong>Motivación, Instrucción, Refuerzo y Evaluación:</strong>
+                  </p>
+                  <ul style={{ paddingLeft: '15px', listStyleType: 'disc', fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <li><strong>La Motivación</strong> se refiere a que toda actividad scout debe comenzar con buen ánimo, juegos cortos, de mucho movimiento del cuerpo, gritos, etc.</li>
+                    <li><strong>La Instrucción</strong> se refiere a que toda actividad debe tener contenido educativo (no es estar en un salón de clases), prácticas de nudos, por ejemplo.</li>
+                    <li><strong>El Refuerzo</strong> busca profundizar sobre algún objetivo que no haya quedado claro. Manteniendo como ejemplo una actividad de nudos, si en la instrucción aprendimos a hacer una silla de bomberos, en el refuerzo pediremos a los participantes hacer un juego de poleas levantando a una persona usando ese nudo.</li>
+                    <li><strong>La Evaluación</strong> se refiere a realizar dinámicas, juegos o discusiones que permitan determinar si se cumplieron los objetivos de la actividad.</li>
+                  </ul>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={100}>
+                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '15px' }}>
+                  <h4 style={{ fontSize: '14px', color: 'var(--leaf-green)', marginBottom: '8px' }}>Herramienta DURAS</h4>
+                  <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '10px', lineHeight: '1.5' }}>
+                    <strong>Criterios que deben cumplir las actividades para ser significativas:</strong>
+                  </p>
+                  <ul style={{ paddingLeft: '15px', listStyleType: 'disc', fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <li><strong>Desafiantes:</strong> y retadoras para los participantes.</li>
+                    <li><strong>Útiles:</strong> y que tengan un propósito o enseñanza.</li>
+                    <li><strong>Recompensantes:</strong> para que al finalizar la actividad el participante se sienta satisfecho con el tiempo invertido.</li>
+                    <li><strong>Atractivas:</strong> buscando que sean del interés de todos los participantes.</li>
+                    <li><strong>Seguras:</strong> orientadas siempre a evitar lesiones físicas y/o emocionales.</li>
+                  </ul>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         )}
 
         {subTab === 'reuniones' && (
-          <div className="animate-fade-in-up">
-            <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Tipos de Reuniones (Estructura y Toma de Decisiones)</h3>
-            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-              En los Caminantes, tú y tu equipo participan protagónicamente en la toma de decisiones a través de estas estructuras de reunión:
-            </p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { 
-                  title: 'Reunión de Equipo de Trabajo', 
-                  freq: 'Transitoria', 
-                  desc: 'Se reúne las veces que sea necesario, las convoca el líder del proyecto y asisten todos los integrantes del grupo de trabajo, sin importar a que equipo permanente pertenezcan. Puede haber diversos cargos para la realización de un proyecto: un Tesorero para administrar los recursos, alguien de Comunicaciones, para promocionar la actividad, alguien en Logística para buscar los materiales, equipos y espacios necesarios, entre otros. En estas reuniones se discuten todos los asuntos para garantizar el cumplimiento del proyecto.' 
-                },
-                { 
-                  title: 'Consejo de Equipo', 
-                  freq: 'Semanal', 
-                  desc: 'Es una reunión semanal, a la que asisten todos los miembros del equipo permanente, debe ser convocada por el Coordinador del equipo y se nombran cargos habituales, como Secretario, Tesorero, Guardián de Leyendas, Cuartel Maestre o intendente, entre otros. Todos los asistentes tienen voz y voto. En los Consejos de Equipo se deciden las próximas actividades a realizar, se escoge quién será el próximo coordinador del equipo, se hace un diagnóstico del funcionamiento del equipo, se discuten los proyectos o ideas que se presentarán en el Congreso de la Comunidad, entre otros.' 
-                },
-                { 
-                  title: 'Comité de la Comunidad', 
-                  freq: 'Mensual', 
-                  desc: 'Se reúne una vez al mes, asisten principalmente los Coordinadores de Equipo y el Adulto de la unidad, este último es quien lo convoca, pero también pueden asistir los líderes de los equipos de trabajo y otros adultos de apoyo cuando sea necesario. En el Comité se hace un diagnóstico para saber cómo planificar cada ciclo de programa (Trimestral, Semestral o Anual), organiza un calendario de actividades y selecciona los proyectos que se ejecutarán en función de lo que propone cada equipo, evalúa las actividades realizadas, apoya el funcionamiento de los grupos de trabajos y de los equipos, supervisa la elección de los coordinadores, busca captar nuevos jóvenes y ayuda en su integración con los equipos.' 
-                },
-                { 
-                  title: 'Congreso de la Comunidad', 
-                  freq: 'Bicíclica (2 veces por ciclo)', 
-                  desc: 'Se reúne 2 veces por cada ciclo de programa (cada 3 o 6 meses), participan todos los jóvenes de la Comunidad de Caminantes, al inicio de cada congreso se elige entre todos los asistentes a un caminante que lo presidirá y a un secretario. Debe ser convocado por el Comité de la Comunidad y en esta reunión se aprueban reglamentos internos, normas de convivencia, se establecen los objetivos anuales de la comunidad, se aprueba el calendario de actividades presentado por el Comité, entre otros.' 
-                }
-              ].map((r, idx) => (
-                <div key={idx} style={{ background: 'rgba(255,255,255,0.02)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <h4 style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>{r.title}</h4>
-                    <span style={{ fontSize: '10px', background: 'rgba(0,141,168,0.2)', padding: '3px 8px', borderRadius: '10px', color: 'var(--river-blue)', fontWeight: 'bold' }}>{r.freq}</span>
+          <div className="pasos-layout">
+            {/* Desktop sticky image */}
+            <div className="pasos-sticky-desktop">
+              <div className="sticky-image-container">
+                {currentStickyImages.map((imgs, idx) => (
+                  <div key={idx} className={`sticky-image ${activeStickyImg === idx ? 'sticky-image--active' : ''}`}>
+                    {imgs.map((src, i) => (
+                      <img key={i} src={src} alt="" />
+                    ))}
                   </div>
-                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{r.desc}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
-              <img src={imgReuniones1} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.1s' }} />
-              <img src={imgReuniones2} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.2s' }} />
-              <img src={imgReuniones3} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.3s' }} />
-              <img src={imgReuniones4} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.4s' }} />
-              <img src={imgReuniones5} alt="Reuniones" className="section-image animate-fade-in-up" style={{ animationDelay: '0.5s' }} />
+            <div className="pasos-content">
+              <ScrollReveal>
+                <div ref={reunionesRef}>
+                  <h3 style={{ marginBottom: '10px', color: 'var(--river-blue)' }}>Tipos de Reuniones (Estructura y Toma de Decisiones)</h3>
+                  <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                    En los Caminantes, tú y tu equipo participan protagónicamente en la toma de decisiones a través de estas estructuras de reunión:
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[
+                  { 
+                    title: 'Reunión de Equipo de Trabajo', 
+                    freq: 'Transitoria', 
+                    desc: 'Se reúne las veces que sea necesario, las convoca el líder del proyecto y asisten todos los integrantes del grupo de trabajo, sin importar a que equipo permanente pertenezcan. Puede haber diversos cargos para la realización de un proyecto: un Tesorero para administrar los recursos, alguien de Comunicaciones, para promocionar la actividad, alguien en Logística para buscar los materiales, equipos y espacios necesarios, entre otros. En estas reuniones se discuten todos los asuntos para garantizar el cumplimiento del proyecto.' 
+                  },
+                  { 
+                    title: 'Consejo de Equipo', 
+                    freq: 'Semanal', 
+                    desc: 'Es una reunión semanal, a la que asisten todos los miembros del equipo permanente, debe ser convocada por el Coordinador del equipo y se nombran cargos habituales, como Secretario, Tesorero, Guardián de Leyendas, Cuartel Maestre o intendente, entre otros. Todos los asistentes tienen voz y voto. En los Consejos de Equipo se deciden las próximas actividades a realizar, se escoge quién será el próximo coordinador del equipo, se hace un diagnóstico del funcionamiento del equipo, se discuten los proyectos o ideas que se presentarán en el Congreso de la Comunidad, entre otros.' 
+                  },
+                  { 
+                    title: 'Comité de la Comunidad', 
+                    freq: 'Mensual', 
+                    desc: 'Se reúne una vez al mes, asisten principalmente los Coordinadores de Equipo y el Adulto de la unidad, este último es quien lo convoca, pero también pueden asistir los líderes de los equipos de trabajo y otros adultos de apoyo cuando sea necesario. En el Comité se hace un diagnóstico para saber cómo planificar cada ciclo de programa (Trimestral, Semestral o Anual), organiza un calendario de actividades y selecciona los proyectos que se ejecutarán en función de lo que propone cada equipo, evalúa las actividades realizadas, apoya el funcionamiento de los grupos de trabajos y de los equipos, supervisa la elección de los coordinadores, busca captar nuevos jóvenes y ayuda en su integración con los equipos.' 
+                  },
+                  { 
+                    title: 'Congreso de la Comunidad', 
+                    freq: 'Bicíclica (2 veces por ciclo)', 
+                    desc: 'Se reúne 2 veces por cada ciclo de programa (cada 3 o 6 meses), participan todos los jóvenes de la Comunidad de Caminantes, al inicio de cada congreso se elige entre todos los asistentes a un caminante que lo presidirá y a un secretario. Debe ser convocado por el Comité de la Comunidad y en esta reunión se aprueban reglamentos internos, normas de convivencia, se establecen los objetivos anuales de la comunidad, se aprueba el calendario de actividades presentado por el Comité, entre otros.' 
+                  }
+                ].map((r, idx) => (
+                  <ScrollReveal key={idx} delay={idx * 80}>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <h4 style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>{r.title}</h4>
+                        <span style={{ fontSize: '10px', background: 'rgba(0,141,168,0.2)', padding: '3px 8px', borderRadius: '10px', color: 'var(--river-blue)', fontWeight: 'bold' }}>{r.freq}</span>
+                      </div>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{r.desc}</p>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+
+              {/* Mobile-only inline images */}
+              <ScrollReveal delay={100} className="pasos-mobile-only">
+                <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
+                  <img src={imgReuniones1} alt="Reuniones" className="section-image" />
+                  <img src={imgReuniones2} alt="Reuniones" className="section-image" />
+                  <img src={imgReuniones3} alt="Reuniones" className="section-image" />
+                  <img src={imgReuniones4} alt="Reuniones" className="section-image" />
+                  <img src={imgReuniones5} alt="Reuniones" className="section-image" />
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         )}

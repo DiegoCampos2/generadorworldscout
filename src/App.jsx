@@ -1295,7 +1295,9 @@ function PrimerosPasosView({ onNavigate }) {
               </ScrollReveal>
 
               <ScrollReveal delay={100}>
-                <img src={imgHistoria} alt="Nuestra Historia" className="section-image clickable-image" style={{ marginTop: '15px' }} onClick={() => setZoomImg(imgHistoria)} />
+                <div onClick={() => setZoomImg(imgHistoria)} style={{ cursor: 'pointer', marginTop: '15px' }}>
+                  <img src={imgHistoria} alt="Nuestra Historia" className="section-image" />
+                </div>
               </ScrollReveal>
 
               <ScrollReveal delay={150}>
@@ -1310,8 +1312,12 @@ function PrimerosPasosView({ onNavigate }) {
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <img src={imgEquipos1} alt="Equipos" className="section-image clickable-image" onClick={() => setZoomImg(imgEquipos1)} />
-                  <img src={imgEquipos2} alt="Equipos" className="section-image clickable-image" onClick={() => setZoomImg(imgEquipos2)} />
+                  <div onClick={() => setZoomImg(imgEquipos1)} style={{ cursor: 'pointer' }}>
+                    <img src={imgEquipos1} alt="Equipos" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgEquipos2)} style={{ cursor: 'pointer' }}>
+                    <img src={imgEquipos2} alt="Equipos" className="section-image" />
+                  </div>
                 </div>
               </ScrollReveal>
             </div>
@@ -1387,9 +1393,15 @@ function PrimerosPasosView({ onNavigate }) {
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-                  <img src={imgActividades1} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades1)} />
-                  <img src={imgActividades2} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades2)} />
-                  <img src={imgActividades3} alt="Actividades" className="section-image clickable-image" onClick={() => setZoomImg(imgActividades3)} />
+                  <div onClick={() => setZoomImg(imgActividades1)} style={{ cursor: 'pointer' }}>
+                    <img src={imgActividades1} alt="Actividades" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgActividades2)} style={{ cursor: 'pointer' }}>
+                    <img src={imgActividades2} alt="Actividades" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgActividades3)} style={{ cursor: 'pointer' }}>
+                    <img src={imgActividades3} alt="Actividades" className="section-image" />
+                  </div>
                 </div>
               </ScrollReveal>
 
@@ -1476,11 +1488,21 @@ function PrimerosPasosView({ onNavigate }) {
 
               <ScrollReveal delay={100}>
                 <div className="section-image-grid" style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px' }}>
-                  <img src={imgReuniones1} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones1)} />
-                  <img src={imgReuniones2} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones2)} />
-                  <img src={imgReuniones3} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones3)} />
-                  <img src={imgReuniones4} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones4)} />
-                  <img src={imgReuniones5} alt="Reuniones" className="section-image clickable-image" onClick={() => setZoomImg(imgReuniones5)} />
+                  <div onClick={() => setZoomImg(imgReuniones1)} style={{ cursor: 'pointer' }}>
+                    <img src={imgReuniones1} alt="Reuniones" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgReuniones2)} style={{ cursor: 'pointer' }}>
+                    <img src={imgReuniones2} alt="Reuniones" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgReuniones3)} style={{ cursor: 'pointer' }}>
+                    <img src={imgReuniones3} alt="Reuniones" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgReuniones4)} style={{ cursor: 'pointer' }}>
+                    <img src={imgReuniones4} alt="Reuniones" className="section-image" />
+                  </div>
+                  <div onClick={() => setZoomImg(imgReuniones5)} style={{ cursor: 'pointer' }}>
+                    <img src={imgReuniones5} alt="Reuniones" className="section-image" />
+                  </div>
                 </div>
               </ScrollReveal>
             </div>
